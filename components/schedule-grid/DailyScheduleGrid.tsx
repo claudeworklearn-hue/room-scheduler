@@ -315,6 +315,7 @@ export function DailyScheduleGrid({
       </div>
 
       <EventDrawer
+        key={openEvent?.id ?? "none"}
         event={openEvent}
         rooms={rooms}
         tutors={tutors}

@@ -2,6 +2,7 @@
 
 import type { ScheduleEvent, Course, TutorProfile } from "@/lib/supabase/types";
 import { shortHHMM } from "@/lib/time/grid";
+import { resolveEventColor } from "@/lib/subject-colors";
 
 export type EventWithRelations = ScheduleEvent & {
   course: Pick<Course, "id" | "title_th" | "default_color_hex"> | null;
@@ -22,11 +23,11 @@ type Props = {
 const DEFAULT_COLOR = "#E5E7EB";
 
 export function EventBlock({ event, placement, onClick, onDragStart, onDragEnd }: Props) {
-  const color =
-    event.color_hex ||
-    event.course?.default_color_hex ||
-    event.tutor?.color_hex ||
-    DEFAULT_COLOR;
+  const color = resolveEventColor(
+    event.title_th,
+    [event.color_hex, event.course?.default_color_hex, event.tutor?.color_hex],
+    DEFAULT_COLOR,
+  );
 
   const isBlock = event.event_type === "room_block";
   const isOnline = event.delivery_mode === "online";

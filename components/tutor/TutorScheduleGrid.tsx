@@ -11,6 +11,7 @@ import {
   buildSlotLabels,
 } from "@/lib/time/grid";
 import { WEEK_DAYS_TH_LONG } from "@/lib/time/week";
+import { resolveEventColor } from "@/lib/subject-colors";
 
 type EventWithRoom = EventWithRelations & {
   room?: { id: string; code: string; name_th: string; capacity: number } | null;
@@ -133,11 +134,11 @@ export function TutorScheduleGrid({
             {events.map((ev) => {
               const range = eventSlotRange(ev.start_time, ev.end_time);
               if (!range) return null;
-              const color =
-                ev.color_hex ||
-                ev.course?.default_color_hex ||
-                ev.tutor?.color_hex ||
-                "#E5E7EB";
+              const color = resolveEventColor(
+                ev.title_th,
+                [ev.color_hex, ev.course?.default_color_hex, ev.tutor?.color_hex],
+                "#E5E7EB",
+              );
               const isOnline = ev.delivery_mode === "online";
               const isCancelled = ev.status === "cancelled";
 

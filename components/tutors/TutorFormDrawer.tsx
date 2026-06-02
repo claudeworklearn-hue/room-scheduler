@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import type { Branch, TutorProfile } from "@/lib/supabase/types";
 import {
@@ -9,6 +9,7 @@ import {
   type TutorFormState,
 } from "@/app/admin/tutors/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
+import { SUBJECT_LIST } from "@/lib/subject-colors";
 
 const INITIAL: TutorFormState = {};
 
@@ -37,6 +38,13 @@ export function TutorFormDrawer({
 }: Props) {
   const action = mode === "create" ? createTutor : updateTutor;
   const [state, formAction] = useFormState(action, INITIAL);
+  const [subjects, setSubjects] = useState<string[]>(tutor?.subjects ?? []);
+
+  function toggleSubject(key: string) {
+    setSubjects((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
+  }
 
   useEffect(() => {
     if (state.ok) onSaved();
@@ -173,6 +181,45 @@ export function TutorFormDrawer({
                     title={c}
                   />
                 ))}
+              </div>
+            </Field>
+
+            <Field
+              label="วิชาที่รับสอน"
+              hint="เลือกได้มากกว่า 1 วิชา — ใช้กรอง/แนะนำครูในระบบทีหลัง"
+            >
+              <input
+                type="hidden"
+                name="subjects"
+                value={JSON.stringify(subjects)}
+              />
+              <div className="flex flex-wrap gap-1.5">
+                {SUBJECT_LIST.map((s) => {
+                  const on = subjects.includes(s.key);
+                  return (
+                    <button
+                      key={s.key}
+                      type="button"
+                      onClick={() => toggleSubject(s.key)}
+                      className="rounded-full border px-3 py-1 text-xs font-semibold transition"
+                      style={
+                        on
+                          ? {
+                              background: s.color,
+                              borderColor: s.color,
+                              color: "white",
+                            }
+                          : {
+                              borderColor: "#E5E7EB",
+                              color: "#6B7280",
+                              background: "white",
+                            }
+                      }
+                    >
+                      {s.label}
+                    </button>
+                  );
+                })}
               </div>
             </Field>
 

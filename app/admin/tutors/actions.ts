@@ -12,6 +12,8 @@ const HEX = z
   .nullable()
   .optional();
 
+const SUBJECT_KEY = z.enum(["physics", "chem", "bio", "math", "science", "english"]);
+
 const TutorInput = z.object({
   branch_id: z.string().uuid().or(z.literal("")).optional(),
   display_name_th: z
@@ -26,6 +28,7 @@ const TutorInput = z.object({
     .min(1, "ใส่ short code")
     .max(8, "short code ยาวเกิน 8 ตัวอักษร"),
   color_hex: HEX,
+  subjects: z.array(SUBJECT_KEY).default([]),
   active: z.coerce.boolean(),
 });
 
@@ -45,12 +48,27 @@ function flattenErrors(err: z.ZodError): TutorFormState["fieldErrors"] {
 }
 
 function fdToInput(fd: FormData) {
+  // subjects ส่งมาเป็น JSON string (hidden input) — parse แบบ defensive
+  let subjects: string[] = [];
+  const raw = fd.get("subjects") as string | null;
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        subjects = parsed.map((s) => String(s));
+      }
+    } catch {
+      // ทิ้ง array ว่าง — Zod จะ accept default []
+    }
+  }
+
   return {
     branch_id: (fd.get("branch_id") as string) || "",
     display_name_th: fd.get("display_name_th") as string,
     display_name_en: (fd.get("display_name_en") as string) || "",
     short_code: fd.get("short_code") as string,
     color_hex: (fd.get("color_hex") as string) || "",
+    subjects,
     active: fd.get("active") === "on" || fd.get("active") === "true",
   };
 }
@@ -62,6 +80,7 @@ function toRow(data: z.infer<typeof TutorInput>) {
     display_name_en: data.display_name_en || null,
     short_code: data.short_code,
     color_hex: data.color_hex || null,
+    subjects: data.subjects,
     active: data.active,
   };
 }

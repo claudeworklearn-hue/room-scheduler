@@ -43,6 +43,8 @@ export type TutorProfile = {
   display_name_en: string | null;
   short_code: string;
   color_hex: string | null;
+  /** Subject keys the tutor teaches; values come from SUBJECT_COLORS keys. */
+  subjects: string[];
   active: boolean;
   created_at: string;
   updated_at: string;

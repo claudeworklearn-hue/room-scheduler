@@ -6,6 +6,7 @@ import type { Branch, TutorProfile } from "@/lib/supabase/types";
 import { TutorFormDrawer } from "./TutorFormDrawer";
 import { toggleTutorActive } from "@/app/admin/tutors/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
+import { SUBJECT_LIST } from "@/lib/subject-colors";
 
 type Props = {
   branches: Branch[];
@@ -57,6 +58,7 @@ export function TutorsManager({ branches, tutors }: Props) {
               <Th>สี</Th>
               <Th>ชื่อ</Th>
               <Th>Short code</Th>
+              <Th>วิชาที่สอน</Th>
               <Th>สาขา</Th>
               <Th className="text-center">สถานะ</Th>
               <Th className="text-right">การกระทำ</Th>
@@ -65,7 +67,7 @@ export function TutorsManager({ branches, tutors }: Props) {
           <tbody className="divide-y divide-gray-100">
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-8 text-center text-gray-400">
+                <td colSpan={7} className="p-8 text-center text-gray-400">
                   ยังไม่มีติวเตอร์
                 </td>
               </tr>
@@ -86,6 +88,27 @@ export function TutorsManager({ branches, tutors }: Props) {
                   )}
                 </Td>
                 <Td className="font-mono font-semibold text-gray-900">{t.short_code}</Td>
+                <Td>
+                  {t.subjects && t.subjects.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {t.subjects.map((key) => {
+                        const meta = SUBJECT_LIST.find((s) => s.key === key);
+                        if (!meta) return null;
+                        return (
+                          <span
+                            key={key}
+                            className="rounded-full px-2 py-0.5 text-[10px] font-semibold text-white"
+                            style={{ background: meta.color }}
+                          >
+                            {meta.label}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-400">—</span>
+                  )}
+                </Td>
                 <Td>{(t.branch_id && branchById.get(t.branch_id)?.name_th) || "—"}</Td>
                 <Td className="text-center">
                   {t.active ? (

@@ -11,6 +11,22 @@ export const SUBJECT_COLORS = {
   english: "#F9A8D4", // ภาษาอังกฤษ — ชมพูอ่อน (แยกจากฟิสิกส์แดงให้เห็นชัด)
 } as const;
 
+export type SubjectKey = keyof typeof SUBJECT_COLORS;
+
+/** Subjects in the order they appear in the tutor form / chip list. */
+export const SUBJECT_LIST: { key: SubjectKey; label: string; color: string }[] = [
+  { key: "physics", label: "ฟิสิกส์", color: SUBJECT_COLORS.physics },
+  { key: "chem",    label: "เคมี",    color: SUBJECT_COLORS.chem },
+  { key: "bio",     label: "ชีวะ",    color: SUBJECT_COLORS.bio },
+  { key: "math",    label: "คณิต",    color: SUBJECT_COLORS.math },
+  { key: "science", label: "วิทย์",   color: SUBJECT_COLORS.science },
+  { key: "english", label: "อังกฤษ",  color: SUBJECT_COLORS.english },
+];
+
+export function subjectLabel(key: string): string {
+  return SUBJECT_LIST.find((s) => s.key === key)?.label ?? key;
+}
+
 export function detectSubjectColor(title: string | null | undefined): string | null {
   if (!title) return null;
   const t = title.toLowerCase();

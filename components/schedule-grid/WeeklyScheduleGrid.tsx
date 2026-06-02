@@ -23,6 +23,8 @@ type Props = {
   pendings: PendingBooking[];
   tutors: TutorProfile[];
   courses: Course[];
+  // unused for now — weekly view doesn't expose a + button yet
+  branches?: import("@/lib/supabase/types").Branch[];
 };
 
 const DRAG_MIME = "application/x-pending-booking-id";

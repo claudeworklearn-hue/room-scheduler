@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type {
+  Branch,
   Course,
   DayOfWeek,
   PendingBooking,
@@ -14,6 +15,7 @@ import { moveEvent } from "@/app/admin/room-schedule/actions";
 import { useEditPin } from "@/components/edit-mode/useEditMode";
 import { EventDrawer } from "./EventDrawer";
 import { ScheduleFromPendingModal } from "./ScheduleFromPendingModal";
+import { PendingFormDrawer } from "@/components/waiting-list/PendingFormDrawer";
 import {
   SLOTS_PER_DAY,
   buildSlotLabels,
@@ -28,6 +30,7 @@ type Props = {
   pendings: PendingBooking[];
   tutors: TutorProfile[];
   courses: Course[];
+  branches: Branch[];
   /** วันในสัปดาห์ที่กำลังดู (1=จันทร์..7=อาทิตย์) */
   dayOfWeek: DayOfWeek;
 };
@@ -54,6 +57,7 @@ export function DailyScheduleGrid({
   pendings,
   tutors,
   courses,
+  branches,
   dayOfWeek,
 }: Props) {
   const router = useRouter();
@@ -62,6 +66,7 @@ export function DailyScheduleGrid({
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [moveError, setMoveError] = useState<string | null>(null);
+  const [showNewPending, setShowNewPending] = useState(false);
 
   const slotLabels = buildSlotLabels();
   const totalWidth = ROOM_COL_PX + SLOTS_PER_DAY * SLOT_PX;
@@ -236,14 +241,20 @@ export function DailyScheduleGrid({
 
   return (
     <>
-      {pendings.length > 0 && (
-        <WaitingListPanel
-          pendings={pendings}
-          draggingId={draggingId}
-          onDragStart={(id) => setDraggingId(id)}
-          onDragEnd={() => setDraggingId(null)}
-        />
-      )}
+      <WaitingListPanel
+        pendings={pendings}
+        draggingId={draggingId}
+        onDragStart={(id) => setDraggingId(id)}
+        onDragEnd={() => setDraggingId(null)}
+        onCreateClick={() => {
+          if (!isUnlocked) {
+            setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมซ้ายล่าง)");
+            setTimeout(() => setMoveError(null), 4000);
+            return;
+          }
+          setShowNewPending(true);
+        }}
+      />
 
       <div className="mb-3 flex items-center justify-between text-sm">
         <div className="text-gray-600">
@@ -364,6 +375,19 @@ export function DailyScheduleGrid({
         initialDayOfWeek={dayOfWeek}
         initialStartTime={dropTarget?.startTime ?? "17:30:00"}
         onClose={() => setDropTarget(null)}
+      />
+
+      <PendingFormDrawer
+        open={showNewPending}
+        mode="create"
+        branches={branches}
+        courses={courses}
+        tutors={tutors}
+        onClose={() => setShowNewPending(false)}
+        onSaved={() => {
+          setShowNewPending(false);
+          router.refresh();
+        }}
       />
     </>
   );
@@ -559,33 +583,52 @@ function WaitingListPanel({
   draggingId,
   onDragStart,
   onDragEnd,
+  onCreateClick,
 }: {
   pendings: PendingBooking[];
   draggingId: string | null;
   onDragStart: (id: string) => void;
   onDragEnd: () => void;
+  onCreateClick: () => void;
 }) {
   return (
     <div className="mb-4 rounded-2xl border border-gray-200 bg-amber-50/40 p-3">
-      <div className="mb-2 flex items-center justify-between px-1">
-        <div className="text-xs font-semibold uppercase tracking-wide text-gray-600">
-          คลังรอจัดตาราง ({pendings.length})
+      <div className="mb-2 flex items-center justify-between gap-3 px-1">
+        <div className="flex items-center gap-3">
+          <div className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+            คลังรอจัดตาราง ({pendings.length})
+          </div>
+          {pendings.length > 0 && (
+            <div className="text-[11px] text-gray-500">
+              ลากการ์ด → วางในช่องเวลา/ห้อง
+            </div>
+          )}
         </div>
-        <div className="text-[11px] text-gray-500">
-          ลากการ์ด → วางในช่องเวลา/ห้อง
+        <button
+          type="button"
+          onClick={onCreateClick}
+          className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-600"
+        >
+          + คอร์สใหม่
+        </button>
+      </div>
+      {pendings.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-amber-200 bg-white/60 px-3 py-4 text-center text-xs text-gray-500">
+          ยังไม่มีดีลรอจัดตาราง — กด <span className="font-semibold">“+ คอร์สใหม่”</span> เพื่อสร้าง
         </div>
-      </div>
-      <div className="flex gap-3 overflow-x-auto pb-1">
-        {pendings.map((p) => (
-          <PendingCard
-            key={p.id}
-            pending={p}
-            isDragging={draggingId === p.id}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-          />
-        ))}
-      </div>
+      ) : (
+        <div className="flex gap-3 overflow-x-auto pb-1">
+          {pendings.map((p) => (
+            <PendingCard
+              key={p.id}
+              pending={p}
+              isDragging={draggingId === p.id}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

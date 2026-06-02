@@ -137,6 +137,7 @@ export default async function RoomSchedulePage({
               pendings={pendings}
               tutors={tutors}
               courses={courses}
+              branches={branches}
             />
           ) : (
             <DailyScheduleGrid
@@ -145,6 +146,7 @@ export default async function RoomSchedulePage({
               pendings={pendings}
               tutors={tutors}
               courses={courses}
+              branches={branches}
               dayOfWeek={dow}
             />
           )}

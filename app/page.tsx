@@ -107,13 +107,20 @@ export default async function HomePage() {
           <h2 className="mb-3 px-1 text-xs font-semibold uppercase tracking-widest text-gray-500">
             จัดการ
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <ActionCard
               href="/admin/rooms"
               icon="🏛️"
               title="จัดการห้อง"
               desc="สร้าง / แก้ไข / ปิดใช้ห้องเรียน"
               meta={`${roomCount} ห้อง`}
+            />
+            <ActionCard
+              href="/admin/tutors"
+              icon="👤"
+              title="จัดการติวเตอร์"
+              desc="เพิ่ม / แก้ไข ติวเตอร์ + short code + สี"
+              meta={`${tutorCount} คน`}
             />
             <ActionCard
               href="/admin/waiting-list"

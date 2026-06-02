@@ -1,0 +1,1204 @@
+{
+  "events": [
+    {
+      "tutor": "นก",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.5 เพิ่มเกรด 17.30 - 19.30 น."
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 3,
+      "start_time": "16:00:00",
+      "end_time": "17:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "BIO Gifted (พี่นก) 16.00-17.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.4 เพิ่มเกรด G1 (พี่นก) 17.30 - 19.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 A-level (พี่นก) 17.30-19.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ชีวะ โอลิมปิก# 67 (พี่นก) 13.00-15.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 6,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.4 A-level (พี่นก) 18.00 - 20.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "16:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 A-level (พี่นก) 13.00-16.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.4 A-level (พี่นก) 15.30-17.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.5 เพิ่มเกรด G2 17.30 - 19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "คณิต",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "คณิต ม.4 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 A-level (พี่ขลุ่ย) 13.00-15.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "คณิต",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "คณิต ม.6 A-level (พี่ขลุ่ย) 15.30-17.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "คณิต",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "คณิต ม.5 A-level (พี่ขลุ่ย) 18.00-20.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "10:00:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "คณิต ม.4 A-level (พี่ขลุ่ย) 10.00-12.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "คณิต",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "คณิต ม.5 A-level (พี่ขลุ่ย) 13.00-15.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "คณิต",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "คณิต ม.6 A-level (พี่ขลุ่ย) 15.30-17.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 A-level (พี่ขลุ่ย) 18.00-20.00 น."
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 1,
+      "start_time": "20:00:00",
+      "end_time": "21:30:00",
+      "subject": "คณิต",
+      "grade_code": "M3",
+      "planned_student_count": null,
+      "title": "คณิต/น้องพัตเตอร์ ม.3 (พี่ปอร์เช่) 20.00-21.30 น."
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 3,
+      "start_time": "18:00:00",
+      "end_time": "19:30:00",
+      "subject": null,
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "MATH UP ม.5 #68 (พี่ปอร์เช่) 18.00-19.30"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "คณิต",
+      "grade_code": "M1",
+      "planned_student_count": null,
+      "title": "คณิต ม.1 (พี่ปอร์เช่) เวลา 17.30-19.30 น."
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "คณิต",
+      "grade_code": "M2",
+      "planned_student_count": null,
+      "title": "คณิตกลุ่ม ม.2 (พี่ปอร์เช่) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอเช่",
+      "day_of_week": 6,
+      "start_time": "10:00:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องแบ่งปัน (พี่ปอเช่) 10.00 - 12.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 6,
+      "start_time": "12:30:00",
+      "end_time": "14:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //น้องเบล (พี่ปอร์เช่) 12.30-14.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 6,
+      "start_time": "14:30:00",
+      "end_time": "16:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //รักเอย (พี่ปอร์เช่) 14.30-16.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 7,
+      "start_time": "10:30:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องบีม+เปเอฟ (พี่ปอร์เช่) 10.30-12.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 1,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 (ครูอ๊อด) 17.30-19.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 -TCAS 17.30-19.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 (ครูอ๊อด) 17.30-19.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "08:30:00",
+      "end_time": "10:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ เอิร์ธ (ครูอ๊อด) 8.30 - 10.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "10:00:00",
+      "end_time": "11:30:00",
+      "subject": "คณิต",
+      "grade_code": "M3",
+      "planned_student_count": null,
+      "title": "คณิต ม.3 กลุ่ม มิคกี้ 10.00 - 11.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 -TCAS 13.00-15.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "08:00:00",
+      "end_time": "09:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ น้องบีเอ็ม (ครูอ๊อด) 8.00 - 9.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "09:30:00",
+      "end_time": "11:00:00",
+      "subject": "วิทย์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "วิทย์ //ชีมะ (ครูอ๊อด) 9.30-11.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "11:00:00",
+      "end_time": "12:30:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //ต้นกล้า (ครูอ๊อด) 11.00-12.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต// วิณ (ครูอ๊อด) 13.00-14.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "14:30:00",
+      "end_time": "16:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องก้อง (ครูอ๊อด) 14.30 - 16.00"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 1,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 เพิ่มเกรด (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 A-level (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 เพิ่มเกรด (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//นาวี (พี่ปอง) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "เคมี ม.6 A-level กลุ่ม 2 (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 A-level (พี่ปอง) 17.30 - 19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "08:00:00",
+      "end_time": "09:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//น้องเบล (พี่ปอง) 8.00-9.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 EP l (พี่ปอง) 17.30 - 19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//น้องรักเอย (พี่ปอง) 13.00-14.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "09:30:00",
+      "end_time": "10:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี //น้องข้าวโพด (พี่ปอง) 09.30-10.30 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "17:30:00",
+      "end_time": "20:00:00",
+      "subject": "เคมี",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "เคมี ม.6 (พี่ปอง) 17.30-20.00 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 EP l (พี่ปอง) 17.30 - 19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 A-level (พี่ปอง) 17.30 - 19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 A-level (พี่ปอง) 15.30-17.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "17:30:00",
+      "end_time": "19:00:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี /บีม+เปเอฟ (พี่ปอง) 17.30-19.00"
+    },
+    {
+      "tutor": "ถุงเเป้ง",
+      "day_of_week": 3,
+      "start_time": "16:30:00",
+      "end_time": "18:00:00",
+      "subject": "วิทย์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "วิทย์//กลุ่มน้องสกาย (พี่ถุงเเป้ง) 16.30-18.00"
+    },
+    {
+      "tutor": "ถุงแป้ง",
+      "day_of_week": 3,
+      "start_time": "19:00:00",
+      "end_time": "20:30:00",
+      "subject": "วิทย์",
+      "grade_code": "M1",
+      "planned_student_count": null,
+      "title": "วิทย์ ม.1 น้องข้าวหอม 19.00 - 20.30"
+    },
+    {
+      "tutor": "ถุงเเป้ง",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "วิทย์",
+      "grade_code": "M2",
+      "planned_student_count": null,
+      "title": "วิทย์ ม.2 (พี่ถุงเเป้ง) เวลา 17.30-19.30"
+    },
+    {
+      "tutor": "ถุงเเป้ง",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "วิทย์",
+      "grade_code": "M1",
+      "planned_student_count": null,
+      "title": "วิทย์ ม.1 (พี่ถุงเเป้ง) เวลา 17.30-19.30"
+    },
+    {
+      "tutor": "ถุงแป้ง",
+      "day_of_week": 6,
+      "start_time": "19:30:00",
+      "end_time": "21:00:00",
+      "subject": "วิทย์",
+      "grade_code": "M3",
+      "planned_student_count": null,
+      "title": "วิทย์ ม.3 น้องพัตเตอร์ 19.30 - 21.00"
+    },
+    {
+      "tutor": "มายด์",
+      "day_of_week": 2,
+      "start_time": "16:30:00",
+      "end_time": "18:00:00",
+      "subject": "วิทย์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "วิทย์ น้องธัญ 16.30 - 18.00"
+    },
+    {
+      "tutor": "มายด์",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:00:00",
+      "subject": "วิทย์",
+      "grade_code": "M1",
+      "planned_student_count": null,
+      "title": "วิทย์ ม.1 // น้องเบล (พี่มายด์) 17.30-19.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 1,
+      "start_time": "17:00:00",
+      "end_time": "19:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 (ครูอ๊อด) 17.00-19.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 (ครูอ๊อด) 17.30-19.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "08:30:00",
+      "end_time": "10:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ เอิร์ธ (ครูอ๊อด) 8.30 - 10.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "10:00:00",
+      "end_time": "11:30:00",
+      "subject": "คณิต",
+      "grade_code": "M3",
+      "planned_student_count": null,
+      "title": "คณิต ม.3 กลุ่ม มิคกี้ 10.00 - 11.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "09:30:00",
+      "end_time": "11:00:00",
+      "subject": "วิทย์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "วิทย์ //ชีมะ (ครูอ๊อด) 9.30-11.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 เพิ่มเกรด (ครูอ๊อด) 13.00-15.00"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "09:00:00",
+      "end_time": "10:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ น้องบีเอ็ม (ครูอ๊อด) 9.00 - 10.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "11:00:00",
+      "end_time": "12:30:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //ต้นกล้า (ครูอ๊อด) 11.00-12.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต// วิณ (ครูอ๊อด) 13.00-14.30"
+    },
+    {
+      "tutor": "อ๊อด",
+      "day_of_week": 7,
+      "start_time": "14:30:00",
+      "end_time": "16:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องก้อง (ครูอ๊อด) 14.30 - 16.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 1,
+      "start_time": "20:00:00",
+      "end_time": "21:30:00",
+      "subject": "คณิต",
+      "grade_code": "M3",
+      "planned_student_count": null,
+      "title": "คณิต/น้องพัตเตอร์ ม.3 (พี่ปอร์เช่) 20.00-21.30 น."
+    },
+    {
+      "tutor": "ปอเช่",
+      "day_of_week": 2,
+      "start_time": "17:00:00",
+      "end_time": "19:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องภูมิ (พี่ปอเช่) 17.00-19.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 3,
+      "start_time": "18:00:00",
+      "end_time": "19:30:00",
+      "subject": null,
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "MATH UP ม.4 #68 (พี่ปอร์เช่) 18.00-19.30"
+    },
+    {
+      "tutor": "ปอเช่",
+      "day_of_week": 4,
+      "start_time": "19:00:00",
+      "end_time": "21:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต // น้องกิ่ง 19.00 - 21.00 น"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "คณิต",
+      "grade_code": "M2",
+      "planned_student_count": null,
+      "title": "คณิตกลุ่ม ม.2 (พี่ปอร์เช่) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 5,
+      "start_time": "10:30:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องบีม+เปเอฟ (พี่ปอร์เช่) 10.30-12.00"
+    },
+    {
+      "tutor": "ปอเช่",
+      "day_of_week": 6,
+      "start_time": "10:00:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องแบ่งปัน (พี่ปอเช่) 10.00 - 12.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 6,
+      "start_time": "12:30:00",
+      "end_time": "14:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //น้องเบล (พี่ปอร์เช่) 12.30-14.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 6,
+      "start_time": "14:30:00",
+      "end_time": "16:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต //รักเอย (พี่ปอร์เช่) 14.30-16.00"
+    },
+    {
+      "tutor": "ปอร์เช่",
+      "day_of_week": 7,
+      "start_time": "10:30:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "คณิต//น้องบีม+เปเอฟ (พี่ปอร์เช่) 10.30-12.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.4 เพิ่มเกรด 17.30 - 19.30 น."
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 3,
+      "start_time": "16:00:00",
+      "end_time": "17:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "BIO Gifted (พี่นก) 16.00-17.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 G.1 17.30-19.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.5 เพิ่มเกรด G1 (พี่นก) 17.30 - 19.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.5 เพิ่มเกรด G2 (พี่นก) 17.30-19.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ชีวะ โอลิมปิก# 67 (พี่นก) 13.00-15.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 6,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 G.2 - 18.00-20.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "08:30:00",
+      "end_time": "10:30:00",
+      "subject": "ชีวะ",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "ชีวะ adv.#66 (พี่นก) 8.30-10.30"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "16:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.5 A-level (พี่นก) 13.00-16.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "16:00:00",
+      "end_time": "18:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 G.1 (พี่นก) 16.00-18.00"
+    },
+    {
+      "tutor": "นก",
+      "day_of_week": 7,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "ชีวะ",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ชีวะ ม.6 G.2 - 18.00-20.00"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 1,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 เพิ่มเกรด (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 A-level (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//นาวี (พี่ปอง) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 A-level กลุ่ม 2 (พี่ปอง) 17.30-19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "เคมี",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "เคมี ม.6 A-level (พี่ปอง) 17.30 - 19.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "08:00:00",
+      "end_time": "09:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//น้องเบล (พี่ปอง) 8.00-9.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "10:30:00",
+      "end_time": "12:30:00",
+      "subject": "เคมี",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "เคมี ม.6 A-level (พี่ปอง) 10.30 - 12.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี//น้องรักเอย (พี่ปอง) 13.00-14.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "09:30:00",
+      "end_time": "10:30:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี //น้องข้าวโพด (พี่ปอง) 09.30-10.30 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 6,
+      "start_time": "17:30:00",
+      "end_time": "20:00:00",
+      "subject": "เคมี",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "เคมี ม.5 (พี่ปอง) 17.30-20.00 น."
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "10:30:00",
+      "end_time": "12:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 เพิ่มเกรด (พี่ปอง) 10.30 -12.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "13:30:00",
+      "end_time": "15:30:00",
+      "subject": null,
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "Basic chem 13.30-15.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "เคมี",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "เคมี ม.4 A-level (พี่ปอง) 15.30-17.30"
+    },
+    {
+      "tutor": "ปอง",
+      "day_of_week": 7,
+      "start_time": "17:30:00",
+      "end_time": "19:00:00",
+      "subject": "เคมี",
+      "grade_code": "ETC",
+      "planned_student_count": null,
+      "title": "เคมี /บีม+เปเอฟ (พี่ปอง) 17.30-19.00"
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 1,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 2,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 3,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.6 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 4,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "คณิต",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "คณิต ม.6 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 5,
+      "start_time": "17:30:00",
+      "end_time": "19:30:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 A-level (พี่ขลุ่ย) 17.30-19.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.5 A-level (พี่ขลุ่ย) 13.00-15.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "15:30:00",
+      "end_time": "17:30:00",
+      "subject": "คณิต",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "คณิต ม.5 A-level (พี่ขลุ่ย) 15.30-17.30 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 6,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "คณิต",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "คณิต ม.6 A-level (พี่ขลุ่ย) 18.00-20.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "10:00:00",
+      "end_time": "12:00:00",
+      "subject": "คณิต",
+      "grade_code": "M6",
+      "planned_student_count": null,
+      "title": "คณิต ม.6 A-level (พี่ขลุ่ย) 10.00-12.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "subject": "คณิต",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "คณิต ม.4 A-level (พี่ขลุ่ย) 13.00-15.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "16:00:00",
+      "end_time": "18:00:00",
+      "subject": "คณิต",
+      "grade_code": "M5",
+      "planned_student_count": null,
+      "title": "คณิต ม.5 A-level (พี่ขลุ่ย) 16.00-18.00 น."
+    },
+    {
+      "tutor": "ขลุ่ย",
+      "day_of_week": 7,
+      "start_time": "18:00:00",
+      "end_time": "20:00:00",
+      "subject": "ฟิสิกส์",
+      "grade_code": "M4",
+      "planned_student_count": null,
+      "title": "ฟิสิกส์ ม.4 A-level (พี่ขลุ่ย) 18.00-20.00 น."
+    }
+  ],
+  "tutors": [
+    "นก",
+    "ขลุ่ย",
+    "ปอง",
+    "ปอเช่",
+    "ปอร์เช่",
+    "อ๊อด",
+    "ปาย",
+    "ออม",
+    "ถุงแป้ง",
+    "ถุงเเป้ง",
+    "เกรซ",
+    "เบสท์",
+    "มายด์",
+    "ส้มโอ",
+    "น้ำ",
+    "บอส",
+    "เบนซ์",
+    "อิล"
+  ]
+}

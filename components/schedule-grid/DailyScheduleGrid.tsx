@@ -127,7 +127,7 @@ export function DailyScheduleGrid({
     const pendingId = e.dataTransfer.getData(DRAG_MIME);
     if (pendingId) {
       if (!isUnlocked) {
-        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมขวาล่าง)");
+        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมซ้ายล่าง)");
         setTimeout(() => setMoveError(null), 4000);
         setDraggingId(null);
         return;
@@ -150,7 +150,7 @@ export function DailyScheduleGrid({
     if (eventId) {
       setDraggingId(null);
       if (!isUnlocked) {
-        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมขวาล่าง)");
+        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมซ้ายล่าง)");
         setTimeout(() => setMoveError(null), 4000);
         return;
       }

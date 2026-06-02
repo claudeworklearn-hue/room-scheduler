@@ -101,7 +101,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
   async function handleDelete() {
     if (!event) return;
     if (!isUnlocked) {
-      alert("ต้องเปิดโหมดแก้ไขก่อน (กดปุ่ม 🔒 มุมขวาล่าง)");
+      alert("ต้องเปิดโหมดแก้ไขก่อน (กดปุ่ม 🔒 มุมซ้ายล่าง)");
       return;
     }
     if (

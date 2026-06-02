@@ -25,7 +25,7 @@ export function editGateEnabled(): boolean {
 export function checkEditPin(supplied: string | null | undefined): string | null {
   const expected = process.env.EDIT_PIN;
   if (!expected) return null; // gate off
-  if (!supplied) return "ต้องใส่ PIN ก่อนแก้ไข (กดปุ่ม 🔒 มุมขวาบน)";
+  if (!supplied) return "ต้องใส่ PIN ก่อนแก้ไข (กดปุ่ม 🔒 มุมซ้ายล่าง)";
   if (supplied !== expected) return "PIN ไม่ถูกต้อง";
   return null;
 }

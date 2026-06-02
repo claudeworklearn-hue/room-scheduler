@@ -23,7 +23,7 @@ export function EditModeToggle({ gateEnabled }: Props) {
 
   if (!ready) {
     return (
-      <div className="fixed bottom-4 right-4 z-50 select-none rounded-full bg-gray-100 px-4 py-2 text-xs text-gray-400 shadow-md">
+      <div className="fixed bottom-4 left-4 z-50 select-none rounded-full bg-gray-100 px-4 py-2 text-xs text-gray-400 shadow-md">
         …
       </div>
     );
@@ -32,7 +32,7 @@ export function EditModeToggle({ gateEnabled }: Props) {
   if (!gateEnabled) {
     return (
       <div
-        className="fixed bottom-4 right-4 z-50 select-none rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-800 shadow-sm"
+        className="fixed bottom-4 left-4 z-50 select-none rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-800 shadow-sm"
         title="ยังไม่ได้ตั้ง EDIT_PIN ใน server — ใครก็แก้ได้"
       >
         ⚠ โหมด dev — ยังไม่ล็อก
@@ -49,7 +49,7 @@ export function EditModeToggle({ gateEnabled }: Props) {
             lock();
           }
         }}
-        className="fixed bottom-4 right-4 z-50 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600"
+        className="fixed bottom-4 left-4 z-50 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600"
       >
         ✏️ โหมดแก้ไข — กดเพื่อล็อก
       </button>
@@ -83,7 +83,7 @@ export function EditModeToggle({ gateEnabled }: Props) {
           setVerifying(false);
         }
       }}
-      className="fixed bottom-4 right-4 z-50 rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white shadow-lg hover:bg-gray-700 disabled:opacity-50"
+      className="fixed bottom-4 left-4 z-50 rounded-full bg-gray-900 px-4 py-2 text-xs font-semibold text-white shadow-lg hover:bg-gray-700 disabled:opacity-50"
     >
       🔒 {verifying ? "กำลังตรวจ..." : "โหมดดูอย่างเดียว — กดเพื่อใส่ PIN"}
     </button>

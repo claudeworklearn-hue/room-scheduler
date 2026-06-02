@@ -52,7 +52,8 @@ export function WeeklyScheduleGrid({
   const onlineEventsByDay = new Map<number, EventWithRelations[]>();
 
   for (const ev of events) {
-    if (!ev.room_id) {
+    // Online events go to the ONLINE row even if they have a legacy room_id.
+    if (!ev.room_id || ev.delivery_mode === "online") {
       const arr = onlineEventsByDay.get(ev.day_of_week) ?? [];
       arr.push(ev);
       onlineEventsByDay.set(ev.day_of_week, arr);

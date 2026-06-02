@@ -70,10 +70,13 @@ export function DailyScheduleGrid({
   const dayEvents = events.filter((e) => e.day_of_week === dayOfWeek);
 
   // group events by room / online
+  // Events with delivery_mode='online' belong in the ONLINE row even when
+  // they happen to have a room_id from a legacy import — the tag on the
+  // card already reads "ออนไลน์" and users expect them grouped there.
   const eventsByRoom = new Map<string, EventWithRelations[]>();
   const onlineEvents: EventWithRelations[] = [];
   for (const ev of dayEvents) {
-    if (!ev.room_id) {
+    if (!ev.room_id || ev.delivery_mode === "online") {
       onlineEvents.push(ev);
       continue;
     }

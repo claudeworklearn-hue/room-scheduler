@@ -11,6 +11,7 @@ import type {
 } from "@/lib/supabase/types";
 import { PendingFormDrawer } from "./PendingFormDrawer";
 import { deletePending } from "@/app/admin/waiting-list/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 const MODE_LABEL: Record<string, string> = {
   onsite: "ออนไซต์",
@@ -137,6 +138,7 @@ export function PendingsManager({ branches, courses, tutors, pendings }: Props) 
                     router.refresh();
                   }}
                 >
+                  <EditPinField />
                   <input type="hidden" name="id" value={p.id} />
                   <button
                     type="submit"

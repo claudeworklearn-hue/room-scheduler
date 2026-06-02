@@ -11,6 +11,7 @@ import type {
 import { EventBlock, EVENT_DRAG_MIME, type EventWithRelations } from "./EventBlock";
 import { useRouter } from "next/navigation";
 import { moveEvent } from "@/app/admin/room-schedule/actions";
+import { useEditPin } from "@/components/edit-mode/useEditMode";
 import { EventDrawer } from "./EventDrawer";
 import { ScheduleFromPendingModal } from "./ScheduleFromPendingModal";
 import {
@@ -56,6 +57,7 @@ export function DailyScheduleGrid({
   dayOfWeek,
 }: Props) {
   const router = useRouter();
+  const { pin, isUnlocked } = useEditPin();
   const [openEvent, setOpenEvent] = useState<EventWithRelations | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -124,6 +126,12 @@ export function DailyScheduleGrid({
     // case 1: drop pending booking
     const pendingId = e.dataTransfer.getData(DRAG_MIME);
     if (pendingId) {
+      if (!isUnlocked) {
+        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมขวาล่าง)");
+        setTimeout(() => setMoveError(null), 4000);
+        setDraggingId(null);
+        return;
+      }
       const pending = pendings.find((p) => p.id === pendingId);
       if (pending) {
         setDropTarget({
@@ -141,11 +149,17 @@ export function DailyScheduleGrid({
     const eventId = e.dataTransfer.getData(EVENT_DRAG_MIME);
     if (eventId) {
       setDraggingId(null);
+      if (!isUnlocked) {
+        setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมขวาล่าง)");
+        setTimeout(() => setMoveError(null), 4000);
+        return;
+      }
       const res = await moveEvent({
         id: eventId,
         day_of_week: dayOfWeek,
         start_time: slotToTime(slotIndex),
         room_id: roomId,
+        pin,
       });
       if (!res.ok) {
         setMoveError(res.error ?? "ย้ายไม่สำเร็จ");

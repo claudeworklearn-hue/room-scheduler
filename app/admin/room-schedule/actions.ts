@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkEditPin, checkEditPinFromForm } from "@/lib/edit-pin";
 
 const DELIVERY = z.enum(["onsite", "online", "hybrid"]);
 const STATUS = z.enum(["draft", "scheduled", "cancelled"]);
@@ -71,6 +72,9 @@ export async function updateEvent(
   _prev: EventUpdateState,
   fd: FormData,
 ): Promise<EventUpdateState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const parsed = EventUpdate.safeParse(fdToInput(fd));
   if (!parsed.success) {
     return { error: "ข้อมูลไม่ถูกต้อง", fieldErrors: flattenErrors(parsed.error) };
@@ -137,6 +141,7 @@ const MoveInput = z.object({
   day_of_week: DAY,
   start_time: TIME,
   room_id: z.string().uuid().nullable(),
+  pin: z.string().optional(),
 });
 
 export type MoveEventResult = {
@@ -148,6 +153,9 @@ export type MoveEventResult = {
 export async function moveEvent(
   input: z.infer<typeof MoveInput>,
 ): Promise<MoveEventResult> {
+  const pinErr = checkEditPin(input.pin);
+  if (pinErr) return { ok: false, error: pinErr };
+
   const parsed = MoveInput.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง" };
@@ -220,6 +228,7 @@ export async function moveEvent(
 // deleteEvent — hard delete
 // ---------------------------------------------------------
 export async function deleteEvent(fd: FormData): Promise<void> {
+  if (checkEditPinFromForm(fd)) return; // silently no-op when locked
   const id = fd.get("id") as string;
   if (!id) return;
   const supabase = createServerSupabase();

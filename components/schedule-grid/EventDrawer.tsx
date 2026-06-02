@@ -17,6 +17,8 @@ import {
   updateEvent,
   type EventUpdateState,
 } from "@/app/admin/room-schedule/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
+import { useEditPin } from "@/components/edit-mode/useEditMode";
 
 const INITIAL: EventUpdateState = {};
 
@@ -44,6 +46,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
   const router = useRouter();
   const [state, formAction] = useFormState(updateEvent, INITIAL);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { pin, isUnlocked } = useEditPin();
 
   // local form state — sync เมื่อ event เปลี่ยน
   const [title, setTitle] = useState("");
@@ -97,6 +100,10 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
 
   async function handleDelete() {
     if (!event) return;
+    if (!isUnlocked) {
+      alert("ต้องเปิดโหมดแก้ไขก่อน (กดปุ่ม 🔒 มุมขวาล่าง)");
+      return;
+    }
     if (
       !confirm(`ลบคลาส "${event.title_th}" ออกจากตาราง? (ลบถาวร)`)
     ) {
@@ -105,6 +112,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
     setIsDeleting(true);
     const fd = new FormData();
     fd.append("id", event.id);
+    fd.append("pin", pin);
     await deleteEvent(fd);
     setIsDeleting(false);
     router.refresh();
@@ -145,6 +153,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
 
         <form action={formAction} className="flex flex-1 flex-col overflow-hidden">
           <input type="hidden" name="id" value={event.id} />
+          <EditPinField />
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {state.error && (

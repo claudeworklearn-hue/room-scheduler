@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkEditPinFromForm } from "@/lib/edit-pin";
 
 const HEX = z
   .string()
@@ -76,6 +77,9 @@ export async function createTutor(
   _prev: TutorFormState,
   fd: FormData,
 ): Promise<TutorFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const parsed = TutorInput.safeParse(fdToInput(fd));
   if (!parsed.success) {
     return { error: "ข้อมูลไม่ถูกต้อง", fieldErrors: flattenErrors(parsed.error) };
@@ -102,6 +106,9 @@ export async function updateTutor(
   _prev: TutorFormState,
   fd: FormData,
 ): Promise<TutorFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const id = fd.get("id") as string;
   if (!id) return { error: "ไม่พบ id ของติวเตอร์" };
 
@@ -131,6 +138,7 @@ export async function updateTutor(
 }
 
 export async function toggleTutorActive(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
   const id = formData.get("id") as string;
   const next = formData.get("active") === "true";
   if (!id) return;

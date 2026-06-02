@@ -6,6 +6,7 @@ import type { DayOfWeek, PendingBooking, Room } from "@/lib/supabase/types";
 import { schedulePendingToEvent } from "@/app/admin/waiting-list/actions";
 import { addMinutesToTime, shortHHMM } from "@/lib/time/grid";
 import { WEEK_DAYS_TH_LONG } from "@/lib/time/week";
+import { useEditPin } from "@/components/edit-mode/useEditMode";
 
 const MODE_LABEL: Record<string, string> = {
   onsite: "ออนไซต์",
@@ -33,6 +34,7 @@ export function ScheduleFromPendingModal({
   onClose,
 }: Props) {
   const router = useRouter();
+  const { pin } = useEditPin();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [conflict, setConflict] = useState(false);
@@ -87,6 +89,7 @@ export function ScheduleFromPendingModal({
         start_time: `${startTime}:00`,
         end_time: addMinutesToTime(`${startTime}:00`, durationMin),
         override_title: title || undefined,
+        pin,
       });
       if (!res.ok) {
         setError(res.error || "บันทึกไม่สำเร็จ");

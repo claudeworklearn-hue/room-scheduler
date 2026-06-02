@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkEditPinFromForm } from "@/lib/edit-pin";
 
 // ---------------------------------------------------------
 // Zod schema สำหรับฟอร์มสร้าง/แก้ไขห้อง
@@ -77,6 +78,9 @@ export async function createRoom(
   _prev: RoomFormState,
   fd: FormData,
 ): Promise<RoomFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const parsed = RoomInput.safeParse(fdToInput(fd));
   if (!parsed.success) {
     return { error: "ข้อมูลไม่ถูกต้อง", fieldErrors: flattenErrors(parsed.error) };
@@ -112,6 +116,9 @@ export async function updateRoom(
   _prev: RoomFormState,
   fd: FormData,
 ): Promise<RoomFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const id = fd.get("id") as string;
   if (!id) return { error: "ไม่พบรหัสห้องที่จะแก้ไข" };
 
@@ -149,6 +156,7 @@ export async function updateRoom(
 // toggleRoomActive — toggle active flag (soft hide/show)
 // ---------------------------------------------------------
 export async function toggleRoomActive(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
   const id = formData.get("id") as string;
   const next = formData.get("active") === "true";
   if (!id) return;

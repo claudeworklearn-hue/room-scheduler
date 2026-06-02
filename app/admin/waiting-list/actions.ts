@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkEditPin, checkEditPinFromForm } from "@/lib/edit-pin";
 
 // ---------------------------------------------------------
 // Zod schemas
@@ -99,6 +100,9 @@ export async function createPending(
   _prev: PendingFormState,
   fd: FormData,
 ): Promise<PendingFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const parsed = PendingInput.safeParse(fdToInput(fd));
   if (!parsed.success) {
     return { error: "ข้อมูลไม่ถูกต้อง", fieldErrors: flattenErrors(parsed.error) };
@@ -118,6 +122,9 @@ export async function updatePending(
   _prev: PendingFormState,
   fd: FormData,
 ): Promise<PendingFormState> {
+  const pinErr = checkEditPinFromForm(fd);
+  if (pinErr) return { error: pinErr };
+
   const id = fd.get("id") as string;
   if (!id) return { error: "ไม่พบรหัสรายการที่จะแก้ไข" };
 
@@ -140,6 +147,7 @@ export async function updatePending(
 // deletePending (จริง ๆ คือ mark cancelled แต่จะ delete ตรง ๆ ก็ได้)
 // ---------------------------------------------------------
 export async function deletePending(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
   const id = formData.get("id") as string;
   if (!id) return;
   const supabase = createServerSupabase();
@@ -161,6 +169,7 @@ const ScheduleInput = z.object({
   start_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/, "เวลาเริ่มต้นไม่ถูก format"),
   end_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/, "เวลาจบไม่ถูก format"),
   override_title: z.string().trim().min(1).optional(),
+  pin: z.string().optional(),
 });
 
 export type ScheduleFromPendingResult = {
@@ -173,6 +182,9 @@ export type ScheduleFromPendingResult = {
 export async function schedulePendingToEvent(
   input: z.infer<typeof ScheduleInput>,
 ): Promise<ScheduleFromPendingResult> {
+  const pinErr = checkEditPin(input.pin);
+  if (pinErr) return { ok: false, error: pinErr };
+
   const parsed = ScheduleInput.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง" };

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Branch, TutorProfile } from "@/lib/supabase/types";
 import { TutorFormDrawer } from "./TutorFormDrawer";
 import { toggleTutorActive } from "@/app/admin/tutors/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 type Props = {
   branches: Branch[];
@@ -112,6 +113,7 @@ export function TutorsManager({ branches, tutors }: Props) {
                         router.refresh();
                       }}
                     >
+                      <EditPinField />
                       <input type="hidden" name="id" value={t.id} />
                       <input type="hidden" name="active" value={String(!t.active)} />
                       <button

@@ -1,5 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { EditModeToggle } from "@/components/edit-mode/EditModeToggle";
+import { editGateEnabled } from "@/lib/edit-pin";
 
 export const metadata: Metadata = {
   title: "Knowledge Academy — ระบบจัดตารางห้อง",
@@ -11,9 +13,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const gateEnabled = editGateEnabled();
   return (
     <html lang="th">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        {children}
+        <EditModeToggle gateEnabled={gateEnabled} />
+      </body>
     </html>
   );
 }

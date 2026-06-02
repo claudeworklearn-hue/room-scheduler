@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Branch, Room } from "@/lib/supabase/types";
 import { RoomFormDrawer } from "./RoomFormDrawer";
 import { toggleRoomActive } from "@/app/admin/rooms/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 const ROOM_TYPE_LABEL: Record<string, string> = {
   classroom: "ห้องเรียน",
@@ -122,6 +123,7 @@ export function RoomsManager({ branches, rooms }: Props) {
                         router.refresh();
                       }}
                     >
+                      <EditPinField />
                       <input type="hidden" name="id" value={r.id} />
                       <input
                         type="hidden"

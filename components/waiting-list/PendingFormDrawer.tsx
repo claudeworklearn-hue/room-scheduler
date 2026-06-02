@@ -13,6 +13,7 @@ import {
   updatePending,
   type PendingFormState,
 } from "@/app/admin/waiting-list/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 import { StudentNamesInput } from "./StudentNamesInput";
 
 const INITIAL: PendingFormState = {};
@@ -111,6 +112,7 @@ export function PendingFormDrawer({
         </header>
 
         <form action={formAction} className="flex flex-1 flex-col overflow-hidden">
+          <EditPinField />
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {mode === "edit" && pending && (
               <input type="hidden" name="id" value={pending.id} />

@@ -8,6 +8,7 @@ import {
   updateRoom,
   type RoomFormState,
 } from "@/app/admin/rooms/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 const ROOM_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "classroom", label: "ห้องเรียน (classroom)" },
@@ -79,6 +80,7 @@ export function RoomFormDrawer({ open, mode, branches, room, onClose, onSaved }:
         </header>
 
         <form action={formAction} className="flex flex-1 flex-col overflow-hidden">
+          <EditPinField />
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {mode === "edit" && room && (
               <input type="hidden" name="id" value={room.id} />

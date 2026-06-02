@@ -8,6 +8,7 @@ import {
   updateTutor,
   type TutorFormState,
 } from "@/app/admin/tutors/actions";
+import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 const INITIAL: TutorFormState = {};
 
@@ -84,6 +85,7 @@ export function TutorFormDrawer({
         </header>
 
         <form action={formAction} className="flex flex-1 flex-col overflow-hidden">
+          <EditPinField />
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {mode === "edit" && tutor && (
               <input type="hidden" name="id" value={tutor.id} />

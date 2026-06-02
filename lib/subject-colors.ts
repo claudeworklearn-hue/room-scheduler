@@ -8,7 +8,7 @@ export const SUBJECT_COLORS = {
   bio:     "#22C55E", // ชีวะ — เขียว
   math:    "#3B82F6", // คณิต — ฟ้า
   science: "#EAB308", // วิทย์ (รวม) — เหลือง
-  english: "#EC4899", // ภาษาอังกฤษ — ชมพู
+  english: "#F9A8D4", // ภาษาอังกฤษ — ชมพูอ่อน (แยกจากฟิสิกส์แดงให้เห็นชัด)
 } as const;
 
 export function detectSubjectColor(title: string | null | undefined): string | null {

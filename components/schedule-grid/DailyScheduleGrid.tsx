@@ -85,6 +85,17 @@ export function DailyScheduleGrid({
     eventsByRoom.set(ev.room_id, arr);
   }
 
+  // ONLINE has no DB exclusion (no room_id constraint), so multiple
+  // teachers can run classes at the same time. Assign each online event
+  // to the lowest-numbered "lane" that's free when it starts — the
+  // ONLINE row will then span N stacked sub-rows so parallel classes
+  // don't overlap visually.
+  const onlineLaneMap = assignLanes(onlineEvents);
+  const onlineLaneCount =
+    onlineLaneMap.size > 0
+      ? Math.max(...Array.from(onlineLaneMap.values())) + 1
+      : 1;
+
   // group rooms by building
   type Section = { building: string; rooms: Room[] };
   const buildingMap = new Map<string, Room[]>();
@@ -186,13 +197,13 @@ export function DailyScheduleGrid({
   let rowCursor = 2;
   type RowEntry =
     | { type: "section"; row: number; label: string }
-    | { type: "room"; row: number; room: Room };
+    | { type: "room"; row: number; room: Room; laneCount: number };
   const rowEntries: RowEntry[] = [];
   for (const section of sections) {
     rowEntries.push({ type: "section", row: rowCursor, label: section.building });
     rowCursor++;
     for (const room of section.rooms) {
-      rowEntries.push({ type: "room", row: rowCursor, room });
+      rowEntries.push({ type: "room", row: rowCursor, room, laneCount: 1 });
       rowCursor++;
     }
   }
@@ -202,6 +213,7 @@ export function DailyScheduleGrid({
     rowEntries.push({
       type: "room",
       row: rowCursor,
+      laneCount: onlineLaneCount,
       room: {
         id: ONLINE_KEY,
         branch_id: "",
@@ -219,7 +231,7 @@ export function DailyScheduleGrid({
         updated_at: "",
       } as Room,
     });
-    rowCursor++;
+    rowCursor += onlineLaneCount;
   }
 
   return (
@@ -299,6 +311,10 @@ export function DailyScheduleGrid({
                 room={room}
                 isOnline={isOnline}
                 events={roomEvents}
+                laneCount={entry.laneCount}
+                getEventLane={
+                  isOnline ? (id) => onlineLaneMap.get(id) ?? 0 : () => 0
+                }
                 onClickEvent={setOpenEvent}
                 isDragging={draggingId !== null}
                 onDrop={(slotIndex) => (e) =>
@@ -375,6 +391,8 @@ function RoomRow({
   room,
   isOnline,
   events,
+  laneCount,
+  getEventLane,
   onClickEvent,
   isDragging,
   onDrop,
@@ -386,6 +404,8 @@ function RoomRow({
   room: Room;
   isOnline: boolean;
   events: EventWithRelations[];
+  laneCount: number;
+  getEventLane: (eventId: string) => number;
   onClickEvent: (e: EventWithRelations) => void;
   isDragging: boolean;
   onDrop: (slotIndex: number) => (e: React.DragEvent) => void;
@@ -399,7 +419,11 @@ function RoomRow({
     <>
       <div
         className={`sticky left-0 z-10 flex flex-col justify-center border-b border-r border-gray-200 px-3 ${labelBg}`}
-        style={{ gridRow: row, gridColumn: 1, height: ROW_PX }}
+        style={{
+          gridRow: `${row} / span ${laneCount}`,
+          gridColumn: 1,
+          height: ROW_PX * laneCount,
+        }}
       >
         <div className={`text-sm font-semibold ${labelText}`}>
           {room.code}
@@ -414,29 +438,35 @@ function RoomRow({
             {room.name_th}
           </div>
         )}
+        {isOnline && laneCount > 1 && (
+          <div className="text-[10px] text-indigo-600">{laneCount} ครู/คลาส</div>
+        )}
       </div>
 
-      {Array.from({ length: SLOTS_PER_DAY }, (_, i) => (
-        <DropCell
-          key={i}
-          rowIndex={row}
-          slotIndex={i}
-          isDragging={isDragging}
-          isOnline={isOnline}
-          onDrop={onDrop(i)}
-          onDragOver={onDragOver}
-        />
-      ))}
+      {Array.from({ length: laneCount }, (_, laneIdx) =>
+        Array.from({ length: SLOTS_PER_DAY }, (_, slotIdx) => (
+          <DropCell
+            key={`bg-${laneIdx}-${slotIdx}`}
+            rowIndex={row + laneIdx}
+            slotIndex={slotIdx}
+            isDragging={isDragging}
+            isOnline={isOnline}
+            onDrop={onDrop(slotIdx)}
+            onDragOver={onDragOver}
+          />
+        )),
+      )}
 
       {events.map((ev) => {
         const range = eventSlotRange(ev.start_time, ev.end_time);
         if (!range) return null;
+        const lane = getEventLane(ev.id);
         return (
           <EventBlock
             key={ev.id}
             event={ev}
             placement={{
-              gridRow: row,
+              gridRow: row + lane,
               gridColumn: `${range.startSlot + 2} / span ${range.span}`,
             }}
             onClick={onClickEvent}
@@ -492,6 +522,32 @@ function DropCell({
       style={{ gridRow: rowIndex, gridColumn: slotIndex + 2, height: ROW_PX }}
     />
   );
+}
+
+// ----------------------------------------------------------------------
+// Lane allocation: greedy assignment so overlapping events get parallel rows.
+// ----------------------------------------------------------------------
+
+function assignLanes(
+  events: EventWithRelations[],
+): Map<string, number> {
+  const sorted = [...events].sort((a, b) =>
+    a.start_time.localeCompare(b.start_time),
+  );
+  const laneEnds: string[] = []; // last end_time per lane
+  const out = new Map<string, number>();
+
+  for (const ev of sorted) {
+    let lane = laneEnds.findIndex((endTime) => endTime <= ev.start_time);
+    if (lane === -1) {
+      lane = laneEnds.length;
+      laneEnds.push(ev.end_time);
+    } else {
+      laneEnds[lane] = ev.end_time;
+    }
+    out.set(ev.id, lane);
+  }
+  return out;
 }
 
 // ----------------------------------------------------------------------

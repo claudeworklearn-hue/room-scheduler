@@ -24,7 +24,10 @@ export function isGroupCode(code: string | null | undefined): boolean {
 
 /**
  * Returns a Map<course_code, active_enrollment_count>.
- * Batched into one PostgREST call: ?course_code=in.(A,B,C)&is_active=eq.true
+ *
+ * Reads from the `course_enrollment_counts` VIEW in the Attendance project
+ * (pre-aggregated, anon-readable; raw enrollments stay locked behind RLS so
+ * student PII is never exposed cross-project).
  */
 export async function getEnrollmentCounts(
   classCodes: (string | null | undefined)[],
@@ -38,10 +41,9 @@ export async function getEnrollmentCounts(
 
   const list = uniq.map(encodeURIComponent).join(",");
   const url =
-    `${REST}/enrollments` +
+    `${REST}/course_enrollment_counts` +
     `?course_code=in.(${list})` +
-    `&is_active=eq.true` +
-    `&select=course_code`;
+    `&select=course_code,active_count`;
 
   let res: Response;
   try {
@@ -57,9 +59,12 @@ export async function getEnrollmentCounts(
   }
 
   if (!res.ok) return out;
-  const rows = (await res.json()) as { course_code: string }[];
+  const rows = (await res.json()) as {
+    course_code: string;
+    active_count: number;
+  }[];
   for (const r of rows) {
-    out.set(r.course_code, (out.get(r.course_code) ?? 0) + 1);
+    out.set(r.course_code, r.active_count);
   }
   return out;
 }

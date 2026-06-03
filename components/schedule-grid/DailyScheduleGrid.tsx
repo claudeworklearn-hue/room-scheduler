@@ -244,20 +244,15 @@ export function DailyScheduleGrid({
 
   return (
     <>
-      <WaitingListPanel
-        pendings={pendings}
-        draggingId={draggingId}
-        onDragStart={(id) => setDraggingId(id)}
-        onDragEnd={() => setDraggingId(null)}
-        onCreateClick={() => {
-          if (!isUnlocked) {
-            setMoveError("ต้องเปิดโหมดแก้ไขก่อน (ปุ่ม 🔒 มุมซ้ายล่าง)");
-            setTimeout(() => setMoveError(null), 4000);
-            return;
-          }
-          setShowNewPending(true);
-        }}
-      />
+      {isUnlocked && (
+        <WaitingListPanel
+          pendings={pendings}
+          draggingId={draggingId}
+          onDragStart={(id) => setDraggingId(id)}
+          onDragEnd={() => setDraggingId(null)}
+          onCreateClick={() => setShowNewPending(true)}
+        />
+      )}
 
       <div className="mb-3 flex items-center justify-between text-sm">
         <div className="text-gray-600">

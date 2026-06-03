@@ -155,16 +155,16 @@ export function PendingFormDrawer({
                 label="ประเภทคลาส"
                 required
                 error={state.fieldErrors?.code_prefix}
-                hint={mode === "edit" ? "ล็อกหลังสร้างแล้ว" : undefined}
+                hint={
+                  mode === "edit"
+                    ? "ถ้าเปลี่ยน → class_code จะ regen ใหม่อัตโนมัติ"
+                    : undefined
+                }
               >
-                {mode === "edit" && pending && (
-                  <input type="hidden" name="code_prefix" value={pending.code_prefix} />
-                )}
                 <select
-                  name={mode === "edit" ? "_code_prefix_display" : "code_prefix"}
+                  name="code_prefix"
                   defaultValue={pending?.code_prefix ?? "PV"}
-                  disabled={mode === "edit"}
-                  className="form-control disabled:bg-gray-100 disabled:text-gray-500"
+                  className="form-control"
                 >
                   {PREFIX_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
@@ -178,16 +178,16 @@ export function PendingFormDrawer({
                 label="ระดับชั้น"
                 required
                 error={state.fieldErrors?.grade_level}
-                hint={mode === "edit" ? "ล็อกหลังสร้างแล้ว" : undefined}
+                hint={
+                  mode === "edit"
+                    ? "ถ้าเปลี่ยน → class_code จะ regen ใหม่อัตโนมัติ"
+                    : undefined
+                }
               >
-                {mode === "edit" && pending && (
-                  <input type="hidden" name="grade_level" value={pending.grade_level} />
-                )}
                 <select
-                  name={mode === "edit" ? "_grade_level_display" : "grade_level"}
+                  name="grade_level"
                   defaultValue={pending?.grade_level ?? "M4"}
-                  disabled={mode === "edit"}
-                  className="form-control disabled:bg-gray-100 disabled:text-gray-500"
+                  className="form-control"
                 >
                   {GRADE_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>

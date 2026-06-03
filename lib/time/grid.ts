@@ -6,7 +6,7 @@
 //   - แต่ละ event คำนวณว่ากิน slot ไหนถึง slot ไหนใน grid
 
 export const SLOT_MINUTES = 30;
-export const DAY_START_HOUR = 9;   // 09:00 — รองรับคลาสเช้าเสาร์-อาทิตย์
+export const DAY_START_HOUR = 8;   // 08:00 — รองรับคลาสเช้าเสาร์-อาทิตย์ (08:00, 08:30 ฯลฯ)
 export const DAY_END_HOUR = 22;    // 22:00 — เผื่อคลาสค่ำ
 export const SLOTS_PER_DAY =
   ((DAY_END_HOUR - DAY_START_HOUR) * 60) / SLOT_MINUTES;

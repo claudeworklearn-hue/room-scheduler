@@ -248,10 +248,20 @@ export async function schedulePendingToEvent(
   if (insErr) {
     // PostgreSQL exclusion_violation = 23P01
     if (insErr.code === "23P01") {
+      const detail = await describeConflict(
+        supabase,
+        day_of_week,
+        startT,
+        endT,
+        room_id,
+        pending.tutor_profile_id,
+      );
       return {
         ok: false,
         conflict: true,
-        error: "ช่วงเวลานี้ชนกับคลาส/ห้องที่จองไว้แล้ว",
+        error: detail
+          ? `ชนกับ: ${detail}`
+          : "ช่วงเวลานี้ชนกับคลาส/ห้องที่จองไว้แล้ว",
       };
     }
     return { ok: false, error: insErr.message };
@@ -267,4 +277,46 @@ export async function schedulePendingToEvent(
   revalidatePath("/admin/room-schedule");
 
   return { ok: true, eventId: inserted.id };
+}
+
+// ---------------------------------------------------------
+// describeConflict — หา event ที่ทับเวลาเพื่อตอบ user ว่า "ชน" คือกับคลาสไหน
+// match กับ room conflict หรือ tutor conflict (อันใดอันหนึ่ง)
+// ---------------------------------------------------------
+async function describeConflict(
+  supabase: ReturnType<typeof createServerSupabase>,
+  dow: number,
+  startT: string,
+  endT: string,
+  roomId: string | null,
+  tutorId: string | null,
+): Promise<string | null> {
+  const conds: string[] = [];
+  if (roomId) conds.push(`room_id.eq.${roomId}`);
+  if (tutorId) conds.push(`tutor_profile_id.eq.${tutorId}`);
+  if (conds.length === 0) return null;
+
+  const { data } = await supabase
+    .from("schedule_events")
+    .select(
+      "title_th,start_time,end_time,room:rooms(code),tutor:tutor_profiles(display_name_th)",
+    )
+    .eq("day_of_week", dow)
+    .in("status", ["draft", "scheduled"])
+    .lt("start_time", endT)
+    .gt("end_time", startT)
+    .or(conds.join(","));
+
+  if (!data || data.length === 0) return null;
+  const e = data[0] as {
+    title_th: string;
+    start_time: string;
+    end_time: string;
+    room?: { code?: string | null } | null;
+    tutor?: { display_name_th?: string | null } | null;
+  };
+  const time = `${e.start_time.slice(0, 5)}-${e.end_time.slice(0, 5)}`;
+  const where = e.room?.code ? ` ห้อง ${e.room.code}` : "";
+  const who = e.tutor?.display_name_th ? ` ${e.tutor.display_name_th}` : "";
+  return `"${e.title_th}" (${time})${where}${who}`;
 }

@@ -19,9 +19,14 @@ CREATE INDEX IF NOT EXISTS schedule_events_code_prefix_idx
 
 -- Backfill from already-scheduled pendings so the grid picks up the names
 -- that were captured at booking time.
+-- pending_bookings.student_names is jsonb, schedule_events.student_names is text[].
+-- Cast through jsonb_array_elements_text so the backfill compiles.
 UPDATE public.schedule_events e
 SET code_prefix   = p.code_prefix,
-    student_names = p.student_names
+    student_names = COALESCE(
+      ARRAY(SELECT jsonb_array_elements_text(p.student_names)),
+      '{}'::text[]
+    )
 FROM public.pending_bookings p
 WHERE p.scheduled_event_id = e.id
   AND p.code_prefix IS NOT NULL;

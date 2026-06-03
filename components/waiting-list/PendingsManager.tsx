@@ -12,6 +12,7 @@ import type {
 import { PendingFormDrawer } from "./PendingFormDrawer";
 import { deletePending } from "@/app/admin/waiting-list/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
+import { useEditPin } from "@/components/edit-mode/useEditMode";
 
 const MODE_LABEL: Record<string, string> = {
   onsite: "ออนไซต์",
@@ -28,11 +29,36 @@ type Props = {
 
 export function PendingsManager({ branches, courses, tutors, pendings }: Props) {
   const router = useRouter();
+  const { isUnlocked, ready } = useEditPin();
   const [drawer, setDrawer] = useState<
     { mode: "create" } | { mode: "edit"; pending: PendingBooking } | null
   >(null);
 
   const tutorById = new Map(tutors.map((t) => [t.id, t]));
+
+  // Locked viewers see no deals and no edit affordances — same posture as
+  // the Waiting List panel inside the schedule grid.
+  if (!ready) {
+    return (
+      <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-12 text-center text-sm text-gray-400">
+        ⏳ กำลังโหลด...
+      </div>
+    );
+  }
+  if (!isUnlocked) {
+    return (
+      <div className="rounded-2xl border border-dashed border-amber-300 bg-amber-50/60 px-6 py-12 text-center">
+        <div className="text-3xl">🔒</div>
+        <div className="mt-3 text-base font-semibold text-amber-900">
+          ดีลของลูกค้าถูกซ่อนไว้
+        </div>
+        <p className="mt-2 text-sm text-amber-800">
+          กดปุ่ม <span className="font-semibold">"🔒 โหมดดูอย่างเดียว"</span>{" "}
+          มุมซ้ายล่างเพื่อใส่ PIN
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -129,7 +129,7 @@ export async function updateEvent(
   if (error) {
     if (error.code === "23P01") {
       return {
-        error: "ช่วงเวลานี้ชนกับคลาส/ห้องที่จองไว้แล้ว",
+        error: "ช่วงเวลานี้ชน — ครูคนเดิมหรือห้องเดิมมีคลาสอยู่แล้ว (online ไม่ block ครู — รัน migration 0011 ก่อน)",
         conflict: true,
       };
     }

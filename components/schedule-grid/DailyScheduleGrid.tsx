@@ -333,6 +333,7 @@ export function DailyScheduleGrid({
                 onEventDragStart={(id) => setDraggingId(id)}
                 onEventDragEnd={() => setDraggingId(null)}
                 enrollmentCounts={enrollmentCounts}
+                interactive={isUnlocked}
               />
             );
           })}
@@ -423,6 +424,7 @@ function RoomRow({
   onEventDragStart,
   onEventDragEnd,
   enrollmentCounts,
+  interactive,
 }: {
   row: number;
   room: Room;
@@ -437,6 +439,7 @@ function RoomRow({
   onEventDragStart: (id: string) => void;
   onEventDragEnd: () => void;
   enrollmentCounts?: Record<string, number>;
+  interactive: boolean;
 }) {
   const labelBg = isOnline ? "bg-indigo-50" : "bg-white";
   const labelText = isOnline ? "text-indigo-900" : "text-gray-900";
@@ -502,6 +505,7 @@ function RoomRow({
             onDragStart={onEventDragStart}
             onDragEnd={onEventDragEnd}
             liveStudentCount={liveCount}
+            interactive={interactive}
           />
         );
       })}

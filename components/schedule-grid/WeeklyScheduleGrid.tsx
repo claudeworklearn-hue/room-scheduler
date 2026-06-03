@@ -227,6 +227,7 @@ export function WeeklyScheduleGrid({
               onDragOver={handleDragOver}
               onEventDragStart={(id) => setDraggingId(id)}
               onEventDragEnd={() => setDraggingId(null)}
+              interactive={isUnlocked}
             />
           ))}
 
@@ -240,6 +241,7 @@ export function WeeklyScheduleGrid({
               onDragOver={handleDragOver}
               onEventDragStart={(id) => setDraggingId(id)}
               onEventDragEnd={() => setDraggingId(null)}
+              interactive={isUnlocked}
             />
           )}
         </div>
@@ -287,6 +289,7 @@ function Section({
   onDragOver,
   onEventDragStart,
   onEventDragEnd,
+  interactive,
 }: {
   section: { building: string; rooms: Room[] };
   grouped: Map<string, EventWithRelations[]>;
@@ -294,6 +297,7 @@ function Section({
   onClickEvent: (e: EventWithRelations) => void;
   onDrop: (e: React.DragEvent, roomId: string | null, dow: DayOfWeek) => void;
   onDragOver: (e: React.DragEvent) => void;
+  interactive: boolean;
 } & DragCbs) {
   return (
     <>
@@ -314,6 +318,7 @@ function Section({
           onDragOver={onDragOver}
           onEventDragStart={onEventDragStart}
           onEventDragEnd={onEventDragEnd}
+          interactive={interactive}
         />
       ))}
     </>
@@ -329,6 +334,7 @@ function RoomRow({
   onDragOver,
   onEventDragStart,
   onEventDragEnd,
+  interactive,
 }: {
   room: Room;
   grouped: Map<string, EventWithRelations[]>;
@@ -336,6 +342,7 @@ function RoomRow({
   onClickEvent: (e: EventWithRelations) => void;
   onDrop: (e: React.DragEvent, roomId: string | null, dow: DayOfWeek) => void;
   onDragOver: (e: React.DragEvent) => void;
+  interactive: boolean;
 } & DragCbs) {
   return (
     <>
@@ -364,6 +371,7 @@ function RoomRow({
             onDragOver={onDragOver}
             onEventDragStart={onEventDragStart}
             onEventDragEnd={onEventDragEnd}
+            interactive={interactive}
           />
         );
       })}
@@ -379,12 +387,14 @@ function OnlineRow({
   onDragOver,
   onEventDragStart,
   onEventDragEnd,
+  interactive,
 }: {
   eventsByDay: Map<number, EventWithRelations[]>;
   isDragging: boolean;
   onClickEvent: (e: EventWithRelations) => void;
   onDrop: (e: React.DragEvent, roomId: string | null, dow: DayOfWeek) => void;
   onDragOver: (e: React.DragEvent) => void;
+  interactive: boolean;
 } & DragCbs) {
   return (
     <>
@@ -411,6 +421,7 @@ function OnlineRow({
             onEventDragStart={onEventDragStart}
             onEventDragEnd={onEventDragEnd}
             tone="indigo"
+            interactive={interactive}
           />
         );
       })}
@@ -427,6 +438,7 @@ function DayCell({
   onEventDragStart,
   onEventDragEnd,
   tone = "default",
+  interactive,
 }: {
   cellEvents: EventWithRelations[];
   isDragging: boolean;
@@ -436,6 +448,7 @@ function DayCell({
   onEventDragStart: (id: string) => void;
   onEventDragEnd: () => void;
   tone?: "default" | "indigo";
+  interactive: boolean;
 }) {
   const [hover, setHover] = useState(false);
   const bg = tone === "indigo" ? "bg-indigo-50/20" : "bg-white";
@@ -465,6 +478,7 @@ function DayCell({
           onClick={() => onClickEvent(ev)}
           onDragStart={onEventDragStart}
           onDragEnd={onEventDragEnd}
+          interactive={interactive}
         />
       ))}
     </div>
@@ -476,11 +490,13 @@ function MiniEvent({
   onClick,
   onDragStart,
   onDragEnd,
+  interactive = true,
 }: {
   event: EventWithRelations;
   onClick: () => void;
   onDragStart?: (id: string) => void;
   onDragEnd?: () => void;
+  interactive?: boolean;
 }) {
   const color =
     event.color_hex ||
@@ -490,22 +506,30 @@ function MiniEvent({
   const isBlock = event.event_type === "room_block";
   const start = shortHHMM(event.start_time);
   const end = shortHHMM(event.end_time);
+  const canEdit = interactive && !isBlock;
 
   return (
     <button
       type="button"
-      draggable={!isBlock}
-      onDragStart={(e) => {
-        e.dataTransfer.setData(EVENT_DRAG_MIME, event.id);
-        e.dataTransfer.effectAllowed = "move";
-        onDragStart?.(event.id);
-      }}
-      onDragEnd={() => onDragEnd?.()}
-      onClick={onClick}
+      draggable={canEdit}
+      onDragStart={
+        canEdit
+          ? (e) => {
+              e.dataTransfer.setData(EVENT_DRAG_MIME, event.id);
+              e.dataTransfer.effectAllowed = "move";
+              onDragStart?.(event.id);
+            }
+          : undefined
+      }
+      onDragEnd={canEdit ? () => onDragEnd?.() : undefined}
+      onClick={interactive ? onClick : undefined}
+      tabIndex={interactive ? 0 : -1}
       className={[
-        "group relative rounded-md border-l-4 px-1.5 py-1 text-left cursor-grab active:cursor-grabbing",
-        "hover:shadow-md hover:ring-2 hover:ring-brand-300",
-        "transition focus:outline-none focus:ring-2 focus:ring-brand-400",
+        "group relative rounded-md border-l-4 px-1.5 py-1 text-left",
+        interactive
+          ? "cursor-grab active:cursor-grabbing hover:shadow-md hover:ring-2 hover:ring-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          : "",
+        "transition",
         isBlock ? "border-dashed border-gray-300" : "",
         event.status === "cancelled" ? "opacity-40 line-through" : "",
       ].join(" ")}

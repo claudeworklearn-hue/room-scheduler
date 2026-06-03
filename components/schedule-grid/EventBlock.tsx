@@ -20,6 +20,8 @@ type Props = {
   onDragEnd?: () => void;
   /** จำนวนนักเรียนจริง (จาก Attendance enrollments) — แสดงทับ planned ถ้ามี */
   liveStudentCount?: number;
+  /** false = anonymous view — ปิด drag, ไม่เปิด drawer เมื่อคลิก */
+  interactive?: boolean;
 };
 
 const DEFAULT_COLOR = "#E5E7EB";
@@ -31,6 +33,7 @@ export function EventBlock({
   onDragStart,
   onDragEnd,
   liveStudentCount,
+  interactive = true,
 }: Props) {
   const color = resolveEventColor(
     event.title_th,
@@ -44,31 +47,44 @@ export function EventBlock({
   const start = shortHHMM(event.start_time);
   const end = shortHHMM(event.end_time);
 
+  const canEdit = interactive && !isBlock;
   return (
     <button
       type="button"
-      draggable={!isBlock}
-      onDragStart={(e) => {
-        e.dataTransfer.setData(EVENT_DRAG_MIME, event.id);
-        e.dataTransfer.effectAllowed = "move";
-        onDragStart?.(event.id);
-      }}
-      onDragEnd={() => onDragEnd?.()}
-      onClick={() => onClick(event)}
+      draggable={canEdit}
+      onDragStart={
+        canEdit
+          ? (e) => {
+              e.dataTransfer.setData(EVENT_DRAG_MIME, event.id);
+              e.dataTransfer.effectAllowed = "move";
+              onDragStart?.(event.id);
+            }
+          : undefined
+      }
+      onDragEnd={canEdit ? () => onDragEnd?.() : undefined}
+      onClick={interactive ? () => onClick(event) : undefined}
+      tabIndex={interactive ? 0 : -1}
       style={{
         ...placement,
         background: hexToBgTint(color),
         borderLeftColor: color,
+        cursor: interactive ? undefined : "default",
       }}
       className={[
         "group relative m-0.5 flex flex-col justify-center overflow-hidden",
-        "rounded-md border-l-4 px-2 py-1 text-left text-xs cursor-grab active:cursor-grabbing",
-        "hover:shadow-md hover:ring-2 hover:ring-brand-300 hover:z-10",
-        "transition focus:outline-none focus:ring-2 focus:ring-brand-400",
+        "rounded-md border-l-4 px-2 py-1 text-left text-xs",
+        interactive
+          ? "cursor-grab active:cursor-grabbing hover:shadow-md hover:ring-2 hover:ring-brand-300 hover:z-10 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          : "",
+        "transition",
         isBlock ? "border-dashed border-gray-300" : "",
         event.status === "cancelled" ? "opacity-40 line-through" : "",
       ].join(" ")}
-      title={`${event.title_th} (${start}–${end}) — ลากไปวางห้องอื่นได้`}
+      title={
+        interactive
+          ? `${event.title_th} (${start}–${end}) — ลากไปวางห้องอื่นได้`
+          : `${event.title_th} (${start}–${end})`
+      }
     >
       <div className="truncate font-semibold text-gray-900">
         {event.title_th}

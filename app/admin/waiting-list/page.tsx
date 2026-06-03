@@ -7,6 +7,7 @@ import type {
   TutorProfile,
 } from "@/lib/supabase/types";
 import { PendingsManager } from "@/components/waiting-list/PendingsManager";
+import { AdminGuard } from "@/components/edit-mode/AdminGuard";
 
 export const dynamic = "force-dynamic";
 
@@ -85,12 +86,14 @@ export default async function WaitingListPage() {
         จะมี side panel โผล่มาให้ลากการ์ดลงตารางได้เลย
       </p>
 
-      <PendingsManager
-        branches={branches}
-        courses={courses}
-        tutors={tutors}
-        pendings={pendings}
-      />
+      <AdminGuard label="คลังรอจัดตาราง">
+        <PendingsManager
+          branches={branches}
+          courses={courses}
+          tutors={tutors}
+          pendings={pendings}
+        />
+      </AdminGuard>
     </main>
   );
 }

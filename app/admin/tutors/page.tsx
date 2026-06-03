@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
 import type { Branch, TutorProfile } from "@/lib/supabase/types";
 import { TutorsManager } from "@/components/tutors/TutorsManager";
+import { AdminGuard } from "@/components/edit-mode/AdminGuard";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,9 @@ export default async function TutorsPage() {
         เพิ่ม/แก้ไข/ปิดใช้ติวเตอร์ — short code ใช้เป็นชื่อย่อใน grid (เช่น GRT, มัยย์, ปอง)
       </p>
 
-      <TutorsManager branches={branches} tutors={tutors} />
+      <AdminGuard label="ข้อมูลจัดการติวเตอร์">
+        <TutorsManager branches={branches} tutors={tutors} />
+      </AdminGuard>
     </main>
   );
 }

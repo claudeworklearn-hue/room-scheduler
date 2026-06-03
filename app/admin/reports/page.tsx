@@ -7,6 +7,7 @@ import type {
 } from "@/lib/supabase/types";
 import type { EventWithRelations } from "@/components/schedule-grid/EventBlock";
 import { WEEK_DAYS_TH_SHORT } from "@/lib/time/week";
+import { AdminGuard } from "@/components/edit-mode/AdminGuard";
 
 export const dynamic = "force-dynamic";
 
@@ -175,6 +176,8 @@ export default async function ReportsPage() {
             จากตารางทั้งหมดในระบบ
           </p>
         </header>
+
+        <AdminGuard label="รายงานคุณภาพคอร์ส">
 
         {/* Top summary */}
         <section className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -375,6 +378,8 @@ export default async function ReportsPage() {
         <p className="mt-8 text-center text-xs text-gray-400">
           ข้อมูลคำนวณจาก schedule_events ปัจจุบัน · refresh อัตโนมัติเมื่อมีการเปลี่ยนตาราง
         </p>
+
+        </AdminGuard>
       </div>
     </main>
   );

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
 import type { Branch, Room } from "@/lib/supabase/types";
 import { RoomsManager } from "@/components/rooms/RoomsManager";
+import { AdminGuard } from "@/components/edit-mode/AdminGuard";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,9 @@ export default async function RoomsPage() {
         สร้าง/แก้ไข/ปิดใช้ห้องเรียน — การเปลี่ยนแปลงจะ sync เข้าหน้าตารางห้องเรียนทันที
       </p>
 
-      <RoomsManager branches={branches} rooms={rooms} />
+      <AdminGuard label="ข้อมูลจัดการห้อง">
+        <RoomsManager branches={branches} rooms={rooms} />
+      </AdminGuard>
     </main>
   );
 }

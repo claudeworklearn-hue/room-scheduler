@@ -7,7 +7,7 @@
 
 export const SLOT_MINUTES = 30;
 export const DAY_START_HOUR = 8;   // 08:00 — รองรับคลาสเช้าเสาร์-อาทิตย์ (08:00, 08:30 ฯลฯ)
-export const DAY_END_HOUR = 22;    // 22:00 — เผื่อคลาสค่ำ
+export const DAY_END_HOUR = 23;    // 23:00 — เผื่อคลาสค่ำ; label 22:00/22:30 ปรากฏใน grid
 export const SLOTS_PER_DAY =
   ((DAY_END_HOUR - DAY_START_HOUR) * 60) / SLOT_MINUTES;
 

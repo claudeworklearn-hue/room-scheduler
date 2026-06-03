@@ -125,6 +125,10 @@ export type ScheduleEvent = {
   /** Course code shared with the Attendance system (e.g. "BIO-GFT69-M3", "PV69M40001").
    *  Used to fetch the real roster size — PV* codes stay local; others query Attendance. */
   class_code: string | null;
+  /** Class type marker — PV = private (student_names is the roster), GR/CM/IN = group */
+  code_prefix: CodePrefix;
+  /** ชื่อ/ชื่อเล่นของนักเรียน (สำหรับ private course). Empty array for group. */
+  student_names: string[];
   status: EventStatus;
   color_hex: string | null;
   source_type: "manual" | "import" | "api";

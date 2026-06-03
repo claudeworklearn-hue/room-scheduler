@@ -60,6 +60,9 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
   const [courseId, setCourseId] = useState<string>("");
   const [studentCount, setStudentCount] = useState<string>("");
   const [classCode, setClassCode] = useState("");
+  const [codePrefix, setCodePrefix] = useState<"PV" | "GR" | "CM" | "IN">("GR");
+  const [studentNames, setStudentNames] = useState<string[]>([]);
+  const [studentNameDraft, setStudentNameDraft] = useState("");
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
@@ -77,6 +80,9 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
       event.planned_student_count != null ? String(event.planned_student_count) : "",
     );
     setClassCode(event.class_code ?? "");
+    setCodePrefix((event.code_prefix as "PV" | "GR" | "CM" | "IN") ?? "GR");
+    setStudentNames(event.student_names ?? []);
+    setStudentNameDraft("");
     setNotes(event.notes ?? "");
   }, [event]);
 
@@ -135,9 +141,20 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
       >
         <header className="flex items-start justify-between border-b border-gray-100 px-6 py-4">
           <div>
-            <div className="text-xs font-medium uppercase tracking-wide text-gray-400">
-              {event.event_type === "room_block" ? "ปิดห้อง" : "คลาสเรียน"}
-              {" · แก้ไข"}
+            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+              <span>
+                {event.event_type === "room_block" ? "ปิดห้อง" : "คลาสเรียน"}
+                {" · แก้ไข"}
+              </span>
+              {codePrefix === "PV" ? (
+                <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-semibold text-violet-700">
+                  👤 คลาสเดี่ยว
+                </span>
+              ) : (
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                  🎓 คลาสกลุ่ม
+                </span>
+              )}
             </div>
             <h2 className="mt-1 text-xl font-bold text-gray-900">
               {event.title_th}
@@ -169,6 +186,34 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
                 {state.error}
               </div>
             )}
+
+            <Field label="ประเภทคลาส" required>
+              <input type="hidden" name="code_prefix" value={codePrefix} />
+              <div className="inline-flex rounded-lg border border-gray-200 bg-white p-0.5">
+                {(
+                  [
+                    { v: "PV", label: "👤 เดี่ยว" },
+                    { v: "GR", label: "🎓 กลุ่ม" },
+                    { v: "CM", label: "⛺ Camp" },
+                    { v: "IN", label: "⚡ Intensive" },
+                  ] as const
+                ).map((o) => (
+                  <button
+                    key={o.v}
+                    type="button"
+                    onClick={() => setCodePrefix(o.v)}
+                    className={[
+                      "rounded-md px-3 py-1 text-xs font-medium transition",
+                      codePrefix === o.v
+                        ? "bg-brand-500 text-white"
+                        : "text-gray-600 hover:bg-gray-50",
+                    ].join(" ")}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </Field>
 
             <Field label="ชื่อคลาส" required>
               <input
@@ -324,6 +369,66 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
                 className="form-control"
               />
             </Field>
+
+            {codePrefix === "PV" && (
+              <Field
+                label="ชื่อนักเรียน (คลาสเดี่ยว)"
+                hint="กด Enter หรือ , เพื่อเพิ่มชื่อ · กด ✕ บน chip เพื่อลบ"
+              >
+                <input
+                  type="hidden"
+                  name="student_names"
+                  value={JSON.stringify(studentNames)}
+                />
+                <div className="flex flex-wrap items-center gap-1 rounded-lg border border-gray-200 bg-white p-2">
+                  {studentNames.map((n, i) => (
+                    <span
+                      key={`${n}-${i}`}
+                      className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-xs text-violet-800"
+                    >
+                      {n}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setStudentNames((prev) =>
+                            prev.filter((_, idx) => idx !== i),
+                          )
+                        }
+                        className="text-violet-500 hover:text-violet-900"
+                        aria-label={`ลบ ${n}`}
+                      >
+                        ✕
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    type="text"
+                    value={studentNameDraft}
+                    onChange={(e) => setStudentNameDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === ",") {
+                        e.preventDefault();
+                        const v = studentNameDraft.trim();
+                        if (v && !studentNames.includes(v)) {
+                          setStudentNames((prev) => [...prev, v]);
+                        }
+                        setStudentNameDraft("");
+                      } else if (
+                        e.key === "Backspace" &&
+                        studentNameDraft === "" &&
+                        studentNames.length > 0
+                      ) {
+                        setStudentNames((prev) => prev.slice(0, -1));
+                      }
+                    }}
+                    placeholder={
+                      studentNames.length === 0 ? "น้องข้าว, น้องโบว์, ..." : ""
+                    }
+                    className="min-w-[120px] flex-1 border-0 p-1 text-sm focus:outline-none focus:ring-0"
+                  />
+                </div>
+              </Field>
+            )}
 
             <Field
               label="รหัสคอร์ส (จากระบบเช็คชื่อ)"

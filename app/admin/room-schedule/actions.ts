@@ -10,6 +10,8 @@ const STATUS = z.enum(["draft", "scheduled", "cancelled"]);
 const DAY = z.coerce.number().int().min(1).max(7);
 const TIME = z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/, "เวลาไม่ถูก format");
 
+const CODE_PREFIX = z.enum(["PV", "GR", "CM", "IN"]);
+
 const EventUpdate = z.object({
   id: z.string().uuid(),
   title_th: z.string().trim().min(1, "ใส่ชื่อคลาส").max(200),
@@ -32,6 +34,8 @@ const EventUpdate = z.object({
     .or(z.literal("").transform(() => null))
     .nullable()
     .optional(),
+  code_prefix: CODE_PREFIX.default("GR"),
+  student_names: z.array(z.string().trim().min(1).max(60)).max(50).default([]),
   notes: z.string().nullable().or(z.literal("").transform(() => null)).optional(),
 });
 
@@ -56,6 +60,20 @@ function fdToInput(fd: FormData) {
     const v = fd.get(k);
     return v && v !== "" ? (v as string) : null;
   };
+
+  let studentNames: string[] = [];
+  const rawNames = fd.get("student_names") as string | null;
+  if (rawNames) {
+    try {
+      const parsed = JSON.parse(rawNames);
+      if (Array.isArray(parsed)) {
+        studentNames = parsed.map((s) => String(s).trim()).filter(Boolean);
+      }
+    } catch {
+      // ignore — defaults to []
+    }
+  }
+
   return {
     id: fd.get("id") as string,
     title_th: fd.get("title_th") as string,
@@ -69,6 +87,8 @@ function fdToInput(fd: FormData) {
     course_id: trim("course_id"),
     planned_student_count: (fd.get("planned_student_count") as string) || "",
     class_code: (fd.get("class_code") as string) || "",
+    code_prefix: (fd.get("code_prefix") as string) || "GR",
+    student_names: studentNames,
     notes: (fd.get("notes") as string) || "",
   };
 }
@@ -122,6 +142,8 @@ export async function updateEvent(
       course_id: data.course_id ?? null,
       planned_student_count: data.planned_student_count ?? null,
       class_code: data.class_code ?? null,
+      code_prefix: data.code_prefix,
+      student_names: data.student_names,
       notes: data.notes ?? null,
     })
     .eq("id", data.id);

@@ -25,6 +25,13 @@ const EventUpdate = z.object({
     .union([z.coerce.number().int().positive(), z.literal("").transform(() => null)])
     .nullable()
     .optional(),
+  class_code: z
+    .string()
+    .trim()
+    .max(40, "class_code ยาวเกิน 40 ตัวอักษร")
+    .or(z.literal("").transform(() => null))
+    .nullable()
+    .optional(),
   notes: z.string().nullable().or(z.literal("").transform(() => null)).optional(),
 });
 
@@ -61,6 +68,7 @@ function fdToInput(fd: FormData) {
     tutor_profile_id: trim("tutor_profile_id"),
     course_id: trim("course_id"),
     planned_student_count: (fd.get("planned_student_count") as string) || "",
+    class_code: (fd.get("class_code") as string) || "",
     notes: (fd.get("notes") as string) || "",
   };
 }
@@ -113,6 +121,7 @@ export async function updateEvent(
       tutor_profile_id: data.tutor_profile_id ?? null,
       course_id: data.course_id ?? null,
       planned_student_count: data.planned_student_count ?? null,
+      class_code: data.class_code ?? null,
       notes: data.notes ?? null,
     })
     .eq("id", data.id);

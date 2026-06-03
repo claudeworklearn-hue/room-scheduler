@@ -33,6 +33,8 @@ type Props = {
   branches: Branch[];
   /** วันในสัปดาห์ที่กำลังดู (1=จันทร์..7=อาทิตย์) */
   dayOfWeek: DayOfWeek;
+  /** จำนวนนักเรียนจริงต่อ class_code ดึงจากระบบเช็คชื่อแบบ batch */
+  enrollmentCounts?: Record<string, number>;
 };
 
 const SLOT_PX = 64;
@@ -59,6 +61,7 @@ export function DailyScheduleGrid({
   courses,
   branches,
   dayOfWeek,
+  enrollmentCounts,
 }: Props) {
   const router = useRouter();
   const { pin, isUnlocked } = useEditPin();
@@ -334,6 +337,7 @@ export function DailyScheduleGrid({
                 onDragOver={handleDragOver}
                 onEventDragStart={(id) => setDraggingId(id)}
                 onEventDragEnd={() => setDraggingId(null)}
+                enrollmentCounts={enrollmentCounts}
               />
             );
           })}
@@ -423,6 +427,7 @@ function RoomRow({
   onDragOver,
   onEventDragStart,
   onEventDragEnd,
+  enrollmentCounts,
 }: {
   row: number;
   room: Room;
@@ -436,6 +441,7 @@ function RoomRow({
   onDragOver: (e: React.DragEvent) => void;
   onEventDragStart: (id: string) => void;
   onEventDragEnd: () => void;
+  enrollmentCounts?: Record<string, number>;
 }) {
   const labelBg = isOnline ? "bg-indigo-50" : "bg-white";
   const labelText = isOnline ? "text-indigo-900" : "text-gray-900";
@@ -485,6 +491,10 @@ function RoomRow({
         const range = eventSlotRange(ev.start_time, ev.end_time);
         if (!range) return null;
         const lane = getEventLane(ev.id);
+        const liveCount =
+          ev.class_code && enrollmentCounts
+            ? enrollmentCounts[ev.class_code]
+            : undefined;
         return (
           <EventBlock
             key={ev.id}
@@ -496,6 +506,7 @@ function RoomRow({
             onClick={onClickEvent}
             onDragStart={onEventDragStart}
             onDragEnd={onEventDragEnd}
+            liveStudentCount={liveCount}
           />
         );
       })}

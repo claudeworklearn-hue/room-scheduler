@@ -18,11 +18,20 @@ type Props = {
   onClick: (event: EventWithRelations) => void;
   onDragStart?: (id: string) => void;
   onDragEnd?: () => void;
+  /** จำนวนนักเรียนจริง (จาก Attendance enrollments) — แสดงทับ planned ถ้ามี */
+  liveStudentCount?: number;
 };
 
 const DEFAULT_COLOR = "#E5E7EB";
 
-export function EventBlock({ event, placement, onClick, onDragStart, onDragEnd }: Props) {
+export function EventBlock({
+  event,
+  placement,
+  onClick,
+  onDragStart,
+  onDragEnd,
+  liveStudentCount,
+}: Props) {
   const color = resolveEventColor(
     event.title_th,
     [event.color_hex, event.course?.default_color_hex, event.tutor?.color_hex],
@@ -71,9 +80,17 @@ export function EventBlock({ event, placement, onClick, onDragStart, onDragEnd }
       {!isBlock && (
         <div className="truncate text-[10px] text-gray-500">
           {isOnline ? "ออนไลน์" : event.delivery_mode === "hybrid" ? "ไฮบริด" : "ออนไซต์"}
-          {event.planned_student_count
-            ? ` · ${event.planned_student_count} คน`
-            : ""}
+          {liveStudentCount !== undefined ? (
+            <>
+              {" · "}
+              <span className="font-semibold text-emerald-700">
+                {liveStudentCount} คน
+              </span>
+              <span className="text-emerald-700"> 📋</span>
+            </>
+          ) : event.planned_student_count ? (
+            ` · ${event.planned_student_count} คน`
+          ) : null}
         </div>
       )}
     </button>

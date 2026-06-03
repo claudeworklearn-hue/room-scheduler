@@ -122,6 +122,9 @@ export type ScheduleEvent = {
   start_time: string; // "HH:MM:SS"
   end_time: string;   // "HH:MM:SS"
   planned_student_count: number | null;
+  /** Course code shared with the Attendance system (e.g. "BIO-GFT69-M3", "PV69M40001").
+   *  Used to fetch the real roster size — PV* codes stay local; others query Attendance. */
+  class_code: string | null;
   status: EventStatus;
   color_hex: string | null;
   source_type: "manual" | "import" | "api";

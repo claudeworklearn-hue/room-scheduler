@@ -59,6 +59,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
   const [tutorId, setTutorId] = useState<string>("");
   const [courseId, setCourseId] = useState<string>("");
   const [studentCount, setStudentCount] = useState<string>("");
+  const [classCode, setClassCode] = useState("");
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
     setStudentCount(
       event.planned_student_count != null ? String(event.planned_student_count) : "",
     );
+    setClassCode(event.class_code ?? "");
     setNotes(event.notes ?? "");
   }, [event]);
 
@@ -311,7 +313,7 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
               </select>
             </Field>
 
-            <Field label="จำนวนนักเรียน">
+            <Field label="จำนวนนักเรียน (planned — manual)">
               <input
                 name="planned_student_count"
                 type="number"
@@ -320,6 +322,20 @@ export function EventDrawer({ event, rooms, tutors, courses, onClose }: Props) {
                 onChange={(e) => setStudentCount(e.target.value)}
                 placeholder="—"
                 className="form-control"
+              />
+            </Field>
+
+            <Field
+              label="รหัสคอร์ส (จากระบบเช็คชื่อ)"
+              hint="ใส่ code จาก Attendance เช่น BIO-GFT69-M3, MTH-PLUS69-M5 — ถ้าใส่แล้ว grid จะแสดงจำนวนนักเรียนจริงจาก roster (เฉพาะคอร์สกลุ่ม, code ที่ไม่ขึ้นต้นด้วย PV)"
+            >
+              <input
+                name="class_code"
+                type="text"
+                value={classCode}
+                onChange={(e) => setClassCode(e.target.value.trim().toUpperCase())}
+                placeholder="BIO-GFT69-M3"
+                className="form-control font-mono uppercase"
               />
             </Field>
 

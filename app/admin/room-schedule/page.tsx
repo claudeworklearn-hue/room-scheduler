@@ -13,6 +13,7 @@ import { Toolbar, type ViewMode } from "@/components/schedule-grid/Toolbar";
 import { DailyScheduleGrid } from "@/components/schedule-grid/DailyScheduleGrid";
 import { WeeklyScheduleGrid } from "@/components/schedule-grid/WeeklyScheduleGrid";
 import { WEEK_DAYS_TH_LONG } from "@/lib/time/week";
+import { getEnrollmentCounts } from "@/lib/attendance-api";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,11 @@ export default async function RoomSchedulePage({
   const tutors = (tutorsRes.data ?? []) as TutorProfile[];
   const courses = (coursesRes.data ?? []) as Course[];
 
+  // จำนวนนักเรียนจริงจากระบบเช็คชื่อ (Attendance) สำหรับคลาสกลุ่ม
+  const enrollmentCounts = await getEnrollmentCounts(
+    events.map((e) => e.class_code),
+  );
+
   return (
     <main className="mx-auto max-w-[1700px] px-6 py-6">
       <nav className="mb-4 text-sm text-gray-500">
@@ -138,6 +144,7 @@ export default async function RoomSchedulePage({
               tutors={tutors}
               courses={courses}
               branches={branches}
+              enrollmentCounts={Object.fromEntries(enrollmentCounts)}
             />
           ) : (
             <DailyScheduleGrid
@@ -148,6 +155,7 @@ export default async function RoomSchedulePage({
               courses={courses}
               branches={branches}
               dayOfWeek={dow}
+              enrollmentCounts={Object.fromEntries(enrollmentCounts)}
             />
           )}
         </div>

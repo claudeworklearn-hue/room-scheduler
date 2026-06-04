@@ -144,6 +144,13 @@ export default async function HomePage() {
               desc="สรุปการใช้ห้อง · ภาระงานครู · กระจายตามวัน"
               meta="วิเคราะห์"
             />
+            <ActionCard
+              href="/admin/agents"
+              icon="🤖"
+              title="ผู้ช่วยจัดตาราง (AI)"
+              desc="10 agent · วิเคราะห์/แนะนำ slot · ทดสอบผ่าน panel"
+              meta="Phase 1"
+            />
           </div>
         </section>
 

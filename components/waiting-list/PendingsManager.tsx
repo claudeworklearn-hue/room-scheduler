@@ -7,11 +7,19 @@ import type {
   Branch,
   Course,
   PendingBooking,
+  Room,
   TutorProfile,
 } from "@/lib/supabase/types";
 import { PendingFormDrawer } from "./PendingFormDrawer";
 import { deletePending } from "@/app/admin/waiting-list/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
+import { AIScheduleModal } from "@/components/agents/AIScheduleModal";
+import { ScheduleFromPendingModal } from "@/components/schedule-grid/ScheduleFromPendingModal";
+import type {
+  Room as AgentRoom,
+  ScheduleEvent as AgentEvent,
+  Tutor as AgentTutor,
+} from "@/lib/agents/types";
 
 const MODE_LABEL: Record<string, string> = {
   onsite: "ออนไซต์",
@@ -24,15 +32,64 @@ type Props = {
   courses: Course[];
   tutors: TutorProfile[];
   pendings: PendingBooking[];
+  rooms: Room[];
 };
 
-export function PendingsManager({ branches, courses, tutors, pendings }: Props) {
+interface AgentSnapshot {
+  rooms: AgentRoom[];
+  tutors: AgentTutor[];
+  events: AgentEvent[];
+}
+
+export function PendingsManager({
+  branches,
+  courses,
+  tutors,
+  pendings,
+  rooms,
+}: Props) {
   const router = useRouter();
   const [drawer, setDrawer] = useState<
     { mode: "create" } | { mode: "edit"; pending: PendingBooking } | null
   >(null);
 
+  // AI flow state
+  const [aiPending, setAiPending] = useState<PendingBooking | null>(null);
+  const [snapshot, setSnapshot] = useState<AgentSnapshot | null>(null);
+  const [loadingSnap, setLoadingSnap] = useState(false);
+  const [snapErr, setSnapErr] = useState<string | null>(null);
+
+  // After AI pick — opens the existing ScheduleFromPendingModal
+  const [scheduleTarget, setScheduleTarget] = useState<
+    | {
+        pending: PendingBooking;
+        dayOfWeek: number;
+        startTime: string;
+        roomId: string | null;
+      }
+    | null
+  >(null);
+
   const tutorById = new Map(tutors.map((t) => [t.id, t]));
+
+  async function openAI(pending: PendingBooking) {
+    setSnapErr(null);
+    if (!snapshot) {
+      setLoadingSnap(true);
+      try {
+        const res = await fetch("/api/agents/snapshot");
+        if (!res.ok) throw new Error(`snapshot ${res.status}`);
+        const data = (await res.json()) as AgentSnapshot;
+        setSnapshot(data);
+      } catch (e) {
+        setSnapErr((e as Error).message);
+        setLoadingSnap(false);
+        return;
+      }
+      setLoadingSnap(false);
+    }
+    setAiPending(pending);
+  }
 
   // Locked-mode protection now lives on the page via <AdminGuard>; this
   // component assumes the caller has already gated visibility.
@@ -127,6 +184,15 @@ export function PendingsManager({ branches, courses, tutors, pendings }: Props) 
               <div className="mt-3 flex justify-end gap-2">
                 <button
                   type="button"
+                  onClick={() => openAI(p)}
+                  disabled={loadingSnap}
+                  className="rounded border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                  title="ให้ AI เสนอสล็อตที่จัดได้"
+                >
+                  {loadingSnap ? "⏳" : "🤖 จัดให้ AI"}
+                </button>
+                <button
+                  type="button"
                   onClick={() => setDrawer({ mode: "edit", pending: p })}
                   className="rounded border border-gray-200 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-50"
                 >
@@ -166,6 +232,51 @@ export function PendingsManager({ branches, courses, tutors, pendings }: Props) 
         onClose={() => setDrawer(null)}
         onSaved={() => {
           setDrawer(null);
+          router.refresh();
+        }}
+      />
+
+      {snapErr && (
+        <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 shadow-lg">
+          โหลด snapshot ไม่สำเร็จ: {snapErr}
+          <button
+            type="button"
+            onClick={() => setSnapErr(null)}
+            className="ml-2 text-red-500 hover:text-red-700"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {aiPending && snapshot && (
+        <AIScheduleModal
+          pending={aiPending}
+          rooms={snapshot.rooms}
+          tutors={snapshot.tutors}
+          events={snapshot.events}
+          onClose={() => setAiPending(null)}
+          onPick={(slot) => {
+            setAiPending(null);
+            setScheduleTarget({
+              pending: aiPending,
+              dayOfWeek: slot.dayOfWeek,
+              startTime: slot.startTime + ":00",
+              roomId: slot.roomId,
+            });
+          }}
+        />
+      )}
+
+      <ScheduleFromPendingModal
+        open={scheduleTarget !== null}
+        pending={scheduleTarget?.pending ?? null}
+        rooms={rooms}
+        initialRoomId={scheduleTarget?.roomId ?? null}
+        initialDayOfWeek={(scheduleTarget?.dayOfWeek ?? 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7}
+        initialStartTime={scheduleTarget?.startTime ?? "17:30:00"}
+        onClose={() => {
+          setScheduleTarget(null);
           router.refresh();
         }}
       />

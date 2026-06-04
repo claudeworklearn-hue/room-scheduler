@@ -4,6 +4,7 @@ import type {
   Branch,
   Course,
   PendingBooking,
+  Room,
   TutorProfile,
 } from "@/lib/supabase/types";
 import { PendingsManager } from "@/components/waiting-list/PendingsManager";
@@ -14,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function WaitingListPage() {
   const supabase = createServerSupabase();
 
-  const [branchesQ, coursesQ, tutorsQ, pendingsQ] = await Promise.all([
+  const [branchesQ, coursesQ, tutorsQ, pendingsQ, roomsQ] = await Promise.all([
     supabase.from("branches").select("*").eq("active", true).order("name_th"),
     supabase.from("courses").select("*").eq("active", true).order("title_th"),
     supabase
@@ -27,10 +28,16 @@ export default async function WaitingListPage() {
       .select("*")
       .eq("status", "pending")
       .order("created_at", { ascending: false }),
+    supabase
+      .from("rooms")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order")
+      .order("code"),
   ]);
 
   const error =
-    branchesQ.error || coursesQ.error || tutorsQ.error || pendingsQ.error;
+    branchesQ.error || coursesQ.error || tutorsQ.error || pendingsQ.error || roomsQ.error;
   if (error) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-16">
@@ -50,6 +57,7 @@ export default async function WaitingListPage() {
   const courses = (coursesQ.data ?? []) as Course[];
   const tutors = (tutorsQ.data ?? []) as TutorProfile[];
   const pendings = (pendingsQ.data ?? []) as PendingBooking[];
+  const rooms = (roomsQ.data ?? []) as Room[];
 
   if (branches.length === 0) {
     return (
@@ -92,6 +100,7 @@ export default async function WaitingListPage() {
           courses={courses}
           tutors={tutors}
           pendings={pendings}
+          rooms={rooms}
         />
       </AdminGuard>
     </main>

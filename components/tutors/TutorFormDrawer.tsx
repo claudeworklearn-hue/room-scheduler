@@ -39,10 +39,21 @@ export function TutorFormDrawer({
   const action = mode === "create" ? createTutor : updateTutor;
   const [state, formAction] = useFormState(action, INITIAL);
   const [subjects, setSubjects] = useState<string[]>(tutor?.subjects ?? []);
+  const [closedDays, setClosedDays] = useState<number[]>(
+    tutor?.closed_days_for_new ?? [],
+  );
 
   function toggleSubject(key: string) {
     setSubjects((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
+  }
+
+  function toggleClosedDay(day: number) {
+    setClosedDays((prev) =>
+      prev.includes(day)
+        ? prev.filter((d) => d !== day)
+        : [...prev, day].sort((a, b) => a - b),
     );
   }
 
@@ -221,6 +232,43 @@ export function TutorFormDrawer({
                   );
                 })}
               </div>
+            </Field>
+
+            <Field
+              label="🚫 วันที่ปิดรับคอร์สใหม่"
+              hint="ใช้กรอง slot ใน /admin/deal-planner — ครูจะไม่ถูกแนะนำสำหรับวันที่เลือก"
+            >
+              <input
+                type="hidden"
+                name="closed_days_for_new"
+                value={JSON.stringify(closedDays)}
+              />
+              <div className="flex flex-wrap gap-1.5">
+                {[1, 2, 3, 4, 5, 6, 7].map((day) => {
+                  const labels = ["จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส.", "อา."];
+                  const isClosed = closedDays.includes(day);
+                  return (
+                    <button
+                      key={day}
+                      type="button"
+                      onClick={() => toggleClosedDay(day)}
+                      className="rounded-full border px-3 py-1 text-xs font-semibold transition"
+                      style={
+                        isClosed
+                          ? { background: "#FEE2E2", borderColor: "#FCA5A5", color: "#B91C1C" }
+                          : { borderColor: "#D1FAE5", background: "#ECFDF5", color: "#047857" }
+                      }
+                    >
+                      {isClosed ? "🚫" : "✓"} {labels[day - 1]}
+                    </button>
+                  );
+                })}
+              </div>
+              {closedDays.length > 0 && (
+                <div className="mt-2 text-[11px] text-red-600">
+                  ปิดรับ {closedDays.length} วัน — ไม่ถูกแนะนำใน deal-planner
+                </div>
+              )}
             </Field>
 
             <Field label="สาขา — optional" error={state.fieldErrors?.branch_id}>

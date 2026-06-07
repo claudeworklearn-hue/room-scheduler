@@ -45,6 +45,8 @@ export type TutorProfile = {
   color_hex: string | null;
   /** Subject keys the tutor teaches; values come from SUBJECT_COLORS keys. */
   subjects: string[];
+  /** ISO weekdays (1=Mon..7=Sun) the tutor refuses to take new courses on. */
+  closed_days_for_new: number[];
   active: boolean;
   created_at: string;
   updated_at: string;

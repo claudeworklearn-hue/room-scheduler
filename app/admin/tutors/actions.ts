@@ -14,6 +14,8 @@ const HEX = z
 
 const SUBJECT_KEY = z.enum(["physics", "chem", "bio", "math", "science", "english"]);
 
+const DAY_OF_WEEK = z.coerce.number().int().min(1).max(7);
+
 const TutorInput = z.object({
   branch_id: z.string().uuid().or(z.literal("")).optional(),
   display_name_th: z
@@ -29,6 +31,7 @@ const TutorInput = z.object({
     .max(8, "short code ยาวเกิน 8 ตัวอักษร"),
   color_hex: HEX,
   subjects: z.array(SUBJECT_KEY).default([]),
+  closed_days_for_new: z.array(DAY_OF_WEEK).default([]),
   active: z.coerce.boolean(),
 });
 
@@ -58,7 +61,22 @@ function fdToInput(fd: FormData) {
         subjects = parsed.map((s) => String(s));
       }
     } catch {
-      // ทิ้ง array ว่าง — Zod จะ accept default []
+      // ignore — defaults to []
+    }
+  }
+
+  let closedDays: number[] = [];
+  const rawDays = fd.get("closed_days_for_new") as string | null;
+  if (rawDays) {
+    try {
+      const parsed = JSON.parse(rawDays);
+      if (Array.isArray(parsed)) {
+        closedDays = parsed
+          .map((d) => Number(d))
+          .filter((d) => Number.isInteger(d) && d >= 1 && d <= 7);
+      }
+    } catch {
+      // ignore — defaults to []
     }
   }
 
@@ -69,6 +87,7 @@ function fdToInput(fd: FormData) {
     short_code: fd.get("short_code") as string,
     color_hex: (fd.get("color_hex") as string) || "",
     subjects,
+    closed_days_for_new: closedDays,
     active: fd.get("active") === "on" || fd.get("active") === "true",
   };
 }
@@ -81,6 +100,7 @@ function toRow(data: z.infer<typeof TutorInput>) {
     short_code: data.short_code,
     color_hex: data.color_hex || null,
     subjects: data.subjects,
+    closed_days_for_new: data.closed_days_for_new,
     active: data.active,
   };
 }
@@ -88,8 +108,41 @@ function toRow(data: z.infer<typeof TutorInput>) {
 function revalidate() {
   revalidatePath("/admin/tutors");
   revalidatePath("/admin/room-schedule");
+  revalidatePath("/admin/deal-planner");
   revalidatePath("/tutor/my-schedule");
   revalidatePath("/");
+}
+
+/**
+ * Quick toggle from the deal-planner — flips one day in/out of the
+ * tutor's closed_days_for_new array without opening the full form.
+ */
+export async function toggleTutorClosedDay(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
+  const id = formData.get("id") as string;
+  const day = Number(formData.get("day"));
+  if (!id || !Number.isInteger(day) || day < 1 || day > 7) return;
+
+  const supabase = createServerSupabase();
+  const { data: existing, error: loadErr } = await supabase
+    .from("tutor_profiles")
+    .select("closed_days_for_new")
+    .eq("id", id)
+    .maybeSingle();
+  if (loadErr || !existing) return;
+
+  const current = ((existing.closed_days_for_new as number[]) ?? []).filter(
+    (d) => Number.isInteger(d) && d >= 1 && d <= 7,
+  );
+  const next = current.includes(day)
+    ? current.filter((d) => d !== day)
+    : [...current, day].sort((a, b) => a - b);
+
+  await supabase
+    .from("tutor_profiles")
+    .update({ closed_days_for_new: next })
+    .eq("id", id);
+  revalidate();
 }
 
 export async function createTutor(

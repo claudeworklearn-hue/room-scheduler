@@ -131,6 +131,13 @@ export default async function HomePage() {
               badge={pendingCount > 0 ? pendingCount : undefined}
             />
             <ActionCard
+              href="/admin/deal-planner"
+              icon="🔎"
+              title="ดีลคอร์สตามวิชา"
+              desc="กรองติวเตอร์ตามวิชา ดูตาราง สรุปจำนวนเด็ก และ slot ว่าง"
+              meta="ใหม่"
+            />
+            <ActionCard
               href="/tutor/my-schedule"
               icon="👨‍🏫"
               title="ตารางสอนของฉัน"

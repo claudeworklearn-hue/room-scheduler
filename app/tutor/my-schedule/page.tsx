@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
-import type { TutorProfile } from "@/lib/supabase/types";
+import type { Course, Room, TutorProfile } from "@/lib/supabase/types";
 import type { EventWithRelations } from "@/components/schedule-grid/EventBlock";
 import { TutorScheduleGrid } from "@/components/tutor/TutorScheduleGrid";
 
@@ -61,6 +61,14 @@ export default async function MySchedulePage({
   if (eventsError) return <ErrorPage msg={eventsError.message} />;
   const events = (eventsData ?? []) as EventWithRelations[];
 
+  // 3. Rooms + courses — needed by EventDrawer for in-place edits
+  const [roomsRes, coursesRes] = await Promise.all([
+    supabase.from("rooms").select("*").eq("active", true).order("sort_order").order("code"),
+    supabase.from("courses").select("*").eq("active", true).order("title_th"),
+  ]);
+  const rooms = (roomsRes.data ?? []) as Room[];
+  const courses = (coursesRes.data ?? []) as Course[];
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-6">
       <nav className="mb-4 text-sm text-gray-500">
@@ -80,6 +88,8 @@ export default async function MySchedulePage({
         tutors={tutors}
         selectedTutorId={selectedTutorId}
         events={events}
+        rooms={rooms}
+        courses={courses}
       />
     </main>
   );

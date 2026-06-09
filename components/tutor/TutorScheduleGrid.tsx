@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTransition } from "react";
-import type { DayOfWeek, TutorProfile } from "@/lib/supabase/types";
+import { useState, useTransition } from "react";
+import type { Course, DayOfWeek, Room, TutorProfile } from "@/lib/supabase/types";
 import type { EventWithRelations } from "@/components/schedule-grid/EventBlock";
+import { EventDrawer } from "@/components/schedule-grid/EventDrawer";
+import { useEditPin } from "@/components/edit-mode/useEditMode";
 import {
   shortHHMM,
   SLOTS_PER_DAY,
@@ -21,6 +23,8 @@ type Props = {
   tutors: TutorProfile[];
   selectedTutorId: string;
   events: EventWithRoom[];
+  rooms?: Room[];
+  courses?: Course[];
 };
 
 const DAY_COL_PX = 110;   // ความกว้างของคอลัมน์ชื่อวัน (ซ้ายสุด)
@@ -32,11 +36,15 @@ export function TutorScheduleGrid({
   tutors,
   selectedTutorId,
   events,
+  rooms = [],
+  courses = [],
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const { isUnlocked } = useEditPin();
+  const [openEvent, setOpenEvent] = useState<EventWithRoom | null>(null);
 
   function go(params: Record<string, string>) {
     const next = new URLSearchParams(sp.toString());
@@ -143,23 +151,33 @@ export function TutorScheduleGrid({
               const isCancelled = ev.status === "cancelled";
 
               return (
-                <div
+                <button
                   key={ev.id}
+                  type="button"
+                  onClick={isUnlocked ? () => setOpenEvent(ev) : undefined}
                   style={{
                     gridRow: ev.day_of_week + 1,
                     gridColumn: `${range.startSlot + 2} / span ${range.span}`,
                     background: hexToBgTint(color),
                     borderLeftColor: color,
                     margin: "2px",
+                    cursor: isUnlocked ? "pointer" : "default",
                   }}
+                  tabIndex={isUnlocked ? 0 : -1}
                   className={[
                     "relative flex flex-col justify-center overflow-hidden",
-                    "rounded-md border-l-4 px-2 py-1 text-[11px]",
-                    "hover:z-10 hover:shadow-md hover:ring-2 hover:ring-brand-300",
+                    "rounded-md border-l-4 px-2 py-1 text-left text-[11px]",
+                    isUnlocked
+                      ? "hover:z-10 hover:shadow-md hover:ring-2 hover:ring-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-400"
+                      : "",
                     "transition",
                     isCancelled ? "opacity-40 line-through" : "",
                   ].join(" ")}
-                  title={`${ev.title_th} (${shortHHMM(ev.start_time)}–${shortHHMM(ev.end_time)})`}
+                  title={
+                    isUnlocked
+                      ? `${ev.title_th} (${shortHHMM(ev.start_time)}–${shortHHMM(ev.end_time)}) — คลิกเพื่อแก้`
+                      : `${ev.title_th} (${shortHHMM(ev.start_time)}–${shortHHMM(ev.end_time)})`
+                  }
                 >
                   <div className="truncate font-semibold text-gray-900">
                     {ev.title_th}
@@ -177,16 +195,33 @@ export function TutorScheduleGrid({
                         ? `ห้อง ${ev.room.code}`
                         : ""}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
         </div>
       )}
 
-      <p className="mt-3 text-right text-xs text-gray-500">
-        คลาส repeat ทุกสัปดาห์ · ช่องละ 30 นาที (09:00–22:00)
+      <p className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-gray-500">
+        <span>คลาส repeat ทุกสัปดาห์ · ช่องละ 30 นาที (08:00–23:00)</span>
+        <span className={isUnlocked ? "text-emerald-600" : "text-gray-400"}>
+          {isUnlocked
+            ? "✓ โหมดแก้ไข — คลิกคลาสเพื่อแก้"
+            : "🔒 โหมดดูอย่างเดียว — กดปุ่ม PIN เพื่อแก้"}
+        </span>
       </p>
+
+      <EventDrawer
+        key={openEvent?.id ?? "none"}
+        event={openEvent}
+        rooms={rooms}
+        tutors={tutors}
+        courses={courses}
+        onClose={() => {
+          setOpenEvent(null);
+          router.refresh();
+        }}
+      />
     </>
   );
 }

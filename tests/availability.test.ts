@@ -50,12 +50,20 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
   const res = computeAvailability({ subject: "chem", durationMin: 120 }, world([]));
   const chem = res.filter((r) => r.tutorId === "t1");
   ok("empty schedule → chem free all 7 days", chem.length === 7, chem.length);
+  const mon = chem.find((r) => r.dayOfWeek === 1);
+  const sat = chem.find((r) => r.dayOfWeek === 6);
   ok(
-    "free slot spans full business hours 08:00–23:00",
-    chem[0]?.freeSlots[0]?.start === "08:00" && chem[0]?.freeSlots[0]?.end === "23:00",
-    chem[0]?.freeSlots[0],
+    "Mon (จ–ศ) slot = operating hours 16:00–22:00",
+    mon?.freeSlots[0]?.start === "16:00" && mon?.freeSlots[0]?.end === "22:00",
+    mon?.freeSlots[0],
   );
-  ok("both rooms offered", (chem[0]?.freeSlots[0]?.rooms.length ?? 0) === 2);
+  ok(
+    "Sat (ส–อา) slot = operating hours 08:00–22:00",
+    sat?.freeSlots[0]?.start === "08:00" && sat?.freeSlots[0]?.end === "22:00",
+    sat?.freeSlots[0],
+  );
+  ok("confidence = calendar-free (tentative)", mon?.confidence === "calendar-free", mon?.confidence);
+  ok("both rooms offered", (mon?.freeSlots[0]?.rooms.length ?? 0) === 2);
 }
 
 // 2
@@ -125,7 +133,7 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
     world([{ tutorId: "t1", roomId: "rA", dayOfWeek: 1, startTime: "10:00", endTime: "12:00", status: "cancelled" }]),
   );
   const mon = res.find((r) => r.tutorId === "t1" && r.dayOfWeek === 1);
-  ok("cancelled event ignored → full day free", mon?.freeSlots[0]?.start === "08:00" && mon?.freeSlots[0]?.end === "23:00", mon?.freeSlots[0]);
+  ok("cancelled event ignored → full operating window free", mon?.freeSlots[0]?.start === "16:00" && mon?.freeSlots[0]?.end === "22:00", mon?.freeSlots[0]);
 }
 
 // 9
@@ -135,7 +143,7 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
     world([{ tutorId: "t1", roomId: null, dayOfWeek: 1, startTime: "10:00", endTime: "12:00", status: "scheduled", deliveryMode: "online" }]),
   );
   const mon = res.find((r) => r.tutorId === "t1" && r.dayOfWeek === 1);
-  ok("online class doesn't block onsite availability", mon?.freeSlots[0]?.start === "08:00" && mon?.freeSlots[0]?.end === "23:00", mon?.freeSlots[0]);
+  ok("online class doesn't block onsite availability", mon?.freeSlots[0]?.start === "16:00" && mon?.freeSlots[0]?.end === "22:00", mon?.freeSlots[0]);
 }
 
 // eslint-disable-next-line no-console

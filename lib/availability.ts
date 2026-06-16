@@ -18,7 +18,22 @@ import { toMinutes } from "./conflict-checker";
 import type { DayOfWeek, TimeString } from "./agents/types";
 
 const ALL_DAYS: DayOfWeek[] = [1, 2, 3, 4, 5, 6, 7];
-const DEFAULT_BUSINESS_HOURS = { start: "08:00", end: "23:00" };
+
+/**
+ * เวลาเปิดห้อง (operating hours) ต่อวัน — เสนอ slot ได้เฉพาะในช่วงนี้.
+ * จากแป้ง (ผ่านซันจิ): จ–ศ 16:00–22:00 · ส–อา 08:00–22:00.
+ * แก้ที่นี่ถ้าเวลาเปลี่ยน. caller ส่ง params.businessHours มา override
+ * (ใช้เท่ากันทุกวัน) ได้ — สำหรับ test/ความยืดหยุ่น.
+ */
+const OPERATING_HOURS: Record<DayOfWeek, { start: TimeString; end: TimeString }> = {
+  1: { start: "16:00", end: "22:00" }, // จันทร์
+  2: { start: "16:00", end: "22:00" }, // อังคาร
+  3: { start: "16:00", end: "22:00" }, // พุธ
+  4: { start: "16:00", end: "22:00" }, // พฤหัส
+  5: { start: "16:00", end: "22:00" }, // ศุกร์
+  6: { start: "08:00", end: "22:00" }, // เสาร์
+  7: { start: "08:00", end: "22:00" }, // อาทิตย์
+};
 
 // ============================================================================
 // Input world (slim — only what availability needs, NO PII fields)
@@ -86,6 +101,12 @@ export interface TutorAvailability {
   tutorId: string;
   tutorName: string;
   dayOfWeek: DayOfWeek;
+  /**
+   * "calendar-free" = ว่างตามตาราง (ไม่มีคลาสชน + ห้องว่าง + ในเวลาเปิดห้อง)
+   * แต่ยังไม่ผ่านการยืนยันจากครู → ฝั่งบอท/เว็บต้องถือเป็น tentative และให้
+   * แอดมิน/ครูยืนยันก่อนปิดดีล (เฟส 2 จะมีสถานะ "tutor-confirmed").
+   */
+  confidence: "calendar-free";
   freeSlots: FreeSlot[];
 }
 
@@ -144,8 +165,6 @@ export function computeAvailability(
   const duration = params.durationMin;
   const days = params.days?.length ? params.days : ALL_DAYS;
   const minCap = params.minCapacity ?? 1;
-  const bh = params.businessHours ?? DEFAULT_BUSINESS_HOURS;
-  const window: Interval = { start: toMinutes(bh.start), end: toMinutes(bh.end) };
 
   const rooms = world.rooms.filter((r) => r.capacity >= minCap);
   const tutors = world.tutors.filter((t) =>
@@ -157,6 +176,10 @@ export function computeAvailability(
   for (const tutor of tutors) {
     for (const day of days) {
       if (tutor.closedDaysForNew.includes(day)) continue;
+
+      // Operating hours for this weekday (จ–ศ 16–22, ส–อา 08–22).
+      const dayBh = params.businessHours ?? OPERATING_HOURS[day];
+      const window: Interval = { start: toMinutes(dayBh.start), end: toMinutes(dayBh.end) };
 
       // Tutor's busy intervals this weekday (onsite/hybrid block; online does not).
       const tutorBusy = world.events
@@ -203,6 +226,7 @@ export function computeAvailability(
           tutorId: tutor.id,
           tutorName: tutor.name,
           dayOfWeek: day,
+          confidence: "calendar-free",
           freeSlots,
         });
       }

@@ -108,7 +108,7 @@ export async function GET(req: Request) {
   return NextResponse.json({
     subject,
     durationMin,
-    note: "ช่วงเวลาเป็น template รายสัปดาห์ (วันในสัปดาห์+เวลา) · rooms = ห้องที่ว่างตลอดช่วงนั้น · ไม่มี PII",
+    note: "slot = ว่างตามตารางคอร์สกลุ่ม (template รายสัปดาห์) · ครูยังไม่ยืนยันรับสอนเดี่ยว ต้องยืนยันกับครูก่อนปิดดีล · rooms = ห้องว่างตลอดช่วง · ไม่มี PII",
     tutors,
   });
 }

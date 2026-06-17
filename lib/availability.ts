@@ -35,6 +35,14 @@ const OPERATING_HOURS: Record<DayOfWeek, { start: TimeString; end: TimeString }>
   7: { start: "08:00", end: "22:00" }, // อาทิตย์
 };
 
+/**
+ * คำเตือนสถานะ slot (human-readable) — ตารางครูแสดงเฉพาะ "คอร์สกลุ่ม" ดังนั้น
+ * "ช่องว่าง" = ไม่มีคอร์สกลุ่มช่วงนั้น ไม่ใช่ "ครูยืนยันรับสอนเดี่ยว".
+ * บอท/เว็บต้องแสดงป้ายนี้กัน ผปค เข้าใจผิดว่า "ยืนยันแล้ว".
+ */
+const TENTATIVE_NOTE =
+  "ว่างตามตารางคอร์สกลุ่ม — ยังไม่ยืนยันว่าครูรับสอนเดี่ยวช่วงนี้ ต้องยืนยันกับครูก่อนปิดดีล";
+
 // ============================================================================
 // Input world (slim — only what availability needs, NO PII fields)
 // ============================================================================
@@ -107,6 +115,8 @@ export interface TutorAvailability {
    * แอดมิน/ครูยืนยันก่อนปิดดีล (เฟส 2 จะมีสถานะ "tutor-confirmed").
    */
   confidence: "calendar-free";
+  /** human-readable คำเตือนสถานะ (= TENTATIVE_NOTE) — ให้บอท/เว็บแสดงกัน ผปค เข้าใจผิดว่า "ยืนยันแล้ว". */
+  note: string;
   freeSlots: FreeSlot[];
 }
 
@@ -227,6 +237,7 @@ export function computeAvailability(
           tutorName: tutor.name,
           dayOfWeek: day,
           confidence: "calendar-free",
+          note: TENTATIVE_NOTE,
           freeSlots,
         });
       }

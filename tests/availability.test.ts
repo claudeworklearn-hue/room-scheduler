@@ -63,6 +63,7 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
     sat?.freeSlots[0],
   );
   ok("confidence = calendar-free (tentative)", mon?.confidence === "calendar-free", mon?.confidence);
+  ok("note explains tentative status (ยังไม่ยืนยันครู)", (mon?.note ?? "").includes("ยืนยัน"), mon?.note);
   ok("both rooms offered", (mon?.freeSlots[0]?.rooms.length ?? 0) === 2);
 }
 

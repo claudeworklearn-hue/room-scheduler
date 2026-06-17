@@ -107,6 +107,36 @@ export type PendingBooking = {
 /** ISO weekday: 1=จันทร์, 2=อังคาร, 3=พุธ, 4=พฤหัสบดี, 5=ศุกร์, 6=เสาร์, 7=อาทิตย์ */
 export type DayOfWeek = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+export type BookingRequestStatus = "pending" | "confirmed" | "rejected" | "cancelled";
+
+/**
+ * คำขอจองเรียนเดี่ยวจากผู้ปกครอง (ผ่านเว็บ /book + LINE) — รอแอดมิน/ครูยืนยัน.
+ * line_user_id มาจาก LIFF getProfile() เท่านั้น (❌ ห้ามรับจาก URL param — กัน bug ข้ามคน).
+ */
+export type BookingRequest = {
+  id: string;
+  branch_id: string | null;
+  subject: string;
+  grade_level: string | null;
+  duration_minutes: number;
+  tutor_profile_id: string | null;
+  tutor_name: string | null;
+  day_of_week: DayOfWeek;
+  start_time: string; // "HH:MM:SS"
+  end_time: string;   // "HH:MM:SS"
+  room_id: string | null;
+  contact_name: string;
+  contact_phone: string | null;
+  student_name: string | null;
+  line_user_id: string | null;
+  note: string | null;
+  status: BookingRequestStatus;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 /**
  * Schedule event = template ที่ repeat ทุกสัปดาห์
  * ไม่มีวันที่จริง — มีเพียง day_of_week + start_time + end_time

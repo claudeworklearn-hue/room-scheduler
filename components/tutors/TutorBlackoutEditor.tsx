@@ -7,11 +7,12 @@ import { addTutorBlackout, removeTutorBlackout } from "@/app/admin/tutors/action
 import { EditPinField } from "@/components/edit-mode/EditPinField";
 
 const DAY = ["", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์", "อาทิตย์"];
+const DAY_SHORT = ["", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส.", "อา."];
 
 /**
  * Modal สำหรับตั้ง "ช่วงเวลาที่ครูไม่รับสอน" (blackout) รายสัปดาห์.
- * ปิดเป็นช่วงเวลา (เช่น จันทร์ 16:00–18:00) — availability จะไม่เสนอเวลานี้ให้จอง.
- * (ปิด "ทั้งวัน" ใช้ toggle วันที่หน้า deal-planner — คนละอัน)
+ * ปิดเป็นช่วงเวลา — เลือกได้หลายวันพร้อมกัน (เช่น จ+พ+ศ 16:00–18:00).
+ * availability จะไม่เสนอเวลานี้ให้จอง. (ปิด "ทั้งวัน" ใช้ toggle วันที่หน้า deal-planner)
  */
 export function TutorBlackoutEditor({
   tutor,
@@ -24,11 +25,18 @@ export function TutorBlackoutEditor({
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [day, setDay] = useState(1);
+  const [days, setDays] = useState<number[]>([1]);
   const [start, setStart] = useState("16:00");
   const [end, setEnd] = useState("18:00");
   const [err, setErr] = useState<string | null>(null);
 
+  function toggleDay(d: number) {
+    setDays((prev) =>
+      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b),
+    );
+  }
+
+  // group existing windows by (start,end) เพื่อแสดงหลายวันที่ช่วงเดียวกันรวมกัน
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
@@ -45,7 +53,7 @@ export function TutorBlackoutEditor({
           </button>
         </div>
         <p className="mt-1 text-xs text-gray-500">
-          ปิดเป็นช่วงเวลา (เช่น จันทร์ 16:00–18:00) — ระบบจะไม่เสนอเวลานี้ให้ผู้ปกครองจอง
+          ปิดเป็นช่วงเวลา — เลือกได้หลายวันพร้อมกัน (เช่น จ+พ+ศ 16:00–18:00) · ระบบจะไม่เสนอเวลานี้ให้จอง
         </p>
 
         {/* list windows */}
@@ -83,10 +91,14 @@ export function TutorBlackoutEditor({
           ))}
         </div>
 
-        {/* add window */}
+        {/* add window — เลือกหลายวันได้ */}
         <form
           action={(fd) => {
             setErr(null);
+            if (days.length === 0) {
+              setErr("เลือกวันอย่างน้อย 1 วัน");
+              return;
+            }
             if (start >= end) {
               setErr("เวลาจบต้องหลังเวลาเริ่ม");
               return;
@@ -96,21 +108,36 @@ export function TutorBlackoutEditor({
               router.refresh();
             });
           }}
-          className="mt-4 space-y-2 border-t border-gray-100 pt-3"
+          className="mt-4 space-y-3 border-t border-gray-100 pt-3"
         >
           <EditPinField />
           <input type="hidden" name="id" value={tutor.id} />
+          <input type="hidden" name="days" value={days.join(",")} />
+
+          <div>
+            <div className="mb-1 text-xs text-gray-500">เลือกวัน (กดได้หลายวัน)</div>
+            <div className="flex flex-wrap gap-1">
+              {[1, 2, 3, 4, 5, 6, 7].map((d) => {
+                const on = days.includes(d);
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => toggleDay(d)}
+                    className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition ${
+                      on
+                        ? "border-red-300 bg-red-100 text-red-800"
+                        : "border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    {DAY_SHORT[d]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
-            <select
-              name="day_of_week"
-              value={day}
-              onChange={(e) => setDay(Number(e.target.value))}
-              className="rounded-lg border border-gray-300 px-2 py-1.5 text-sm"
-            >
-              {[1, 2, 3, 4, 5, 6, 7].map((d) => (
-                <option key={d} value={d}>{DAY[d]}</option>
-              ))}
-            </select>
             <input
               type="time"
               name="start_time"
@@ -129,13 +156,16 @@ export function TutorBlackoutEditor({
               required
             />
           </div>
+
           {err && <p className="text-xs text-red-600">{err}</p>}
           <button
             type="submit"
             disabled={pending}
             className="w-full rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
-            {pending ? "บันทึก…" : "+ เพิ่มช่วงเวลาปิด"}
+            {pending
+              ? "บันทึก…"
+              : `+ เพิ่มช่วงเวลาปิด${days.length > 1 ? ` (${days.length} วัน)` : ""}`}
           </button>
         </form>
 

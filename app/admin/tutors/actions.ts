@@ -228,21 +228,35 @@ const HHMM = /^\d{2}:\d{2}$/;
 export async function addTutorBlackout(formData: FormData): Promise<void> {
   if (checkEditPinFromForm(formData)) return;
   const id = formData.get("id") as string;
-  const day = Number(formData.get("day_of_week"));
   const start = (formData.get("start_time") as string) || "";
   const end = (formData.get("end_time") as string) || "";
   const reason = ((formData.get("reason") as string) || "").trim().slice(0, 120);
-  if (!id || !Number.isInteger(day) || day < 1 || day > 7) return;
+  if (!id) return;
   if (!HHMM.test(start) || !HHMM.test(end) || start >= end) return;
 
+  // รับได้หลายวันพร้อมกัน: field "days" = "1,3,5" (fallback "day_of_week" ตัวเดียว)
+  const daysRaw =
+    (formData.get("days") as string) || (formData.get("day_of_week") as string) || "";
+  const days = [
+    ...new Set(
+      daysRaw
+        .split(",")
+        .map((d) => Number(d.trim()))
+        .filter((d) => Number.isInteger(d) && d >= 1 && d <= 7),
+    ),
+  ];
+  if (days.length === 0) return;
+
   const supabase = createServerSupabase();
-  await supabase.from("tutor_blackout_windows").insert({
-    tutor_profile_id: id,
-    day_of_week: day,
-    start_time: start,
-    end_time: end,
-    reason: reason || null,
-  });
+  await supabase.from("tutor_blackout_windows").insert(
+    days.map((d) => ({
+      tutor_profile_id: id,
+      day_of_week: d,
+      start_time: start,
+      end_time: end,
+      reason: reason || null,
+    })),
+  );
   revalidate();
 }
 

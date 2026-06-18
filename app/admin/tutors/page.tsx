@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { createServiceSupabase } from "@/lib/supabase/service";
 import type { Branch, TutorProfile, TutorBlackoutWindow } from "@/lib/supabase/types";
 import { TutorsManager } from "@/components/tutors/TutorsManager";
 import { AdminGuard } from "@/components/edit-mode/AdminGuard";
@@ -33,9 +34,10 @@ export default async function TutorsPage() {
   const branches = (branchesData ?? []) as Branch[];
   const tutors = (tutorsData ?? []) as TutorProfile[];
 
-  // blackout windows (defensive: ถ้ายังไม่รัน migration 0017 → ปล่อยว่าง ไม่ทำหน้าพัง)
+  // blackout windows — ใช้ service-role (ตาราง 0017 ใหม่อาจมี RLS เปิด → anon อ่านไม่เจอ)
+  // defensive: ถ้ายังไม่รัน migration 0017 → ปล่อยว่าง ไม่ทำหน้าพัง
   const blackoutsByTutor: Record<string, TutorBlackoutWindow[]> = {};
-  const bw = await supabase
+  const bw = await createServiceSupabase()
     .from("tutor_blackout_windows")
     .select("*")
     .order("day_of_week")

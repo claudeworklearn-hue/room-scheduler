@@ -72,7 +72,11 @@ export function TutorBlackoutEditor({
               <form
                 action={(fd) =>
                   startTransition(async () => {
-                    await removeTutorBlackout(fd);
+                    const r = await removeTutorBlackout(fd);
+                    if (!r.ok) {
+                      setErr(r.error ?? "ลบไม่สำเร็จ");
+                      return;
+                    }
                     router.refresh();
                   })
                 }
@@ -104,7 +108,11 @@ export function TutorBlackoutEditor({
               return;
             }
             startTransition(async () => {
-              await addTutorBlackout(fd);
+              const r = await addTutorBlackout(fd);
+              if (!r.ok) {
+                setErr(r.error ?? "บันทึกไม่สำเร็จ");
+                return;
+              }
               router.refresh();
             });
           }}

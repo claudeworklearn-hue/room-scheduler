@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { createServiceSupabase } from "@/lib/supabase/service";
 import { checkEditPinFromForm } from "@/lib/edit-pin";
 
 const HEX = z
@@ -225,14 +226,20 @@ export async function toggleTutorActive(formData: FormData): Promise<void> {
 // ---------------------------------------------------------
 const HHMM = /^\d{2}:\d{2}$/;
 
-export async function addTutorBlackout(formData: FormData): Promise<void> {
-  if (checkEditPinFromForm(formData)) return;
+export type BlackoutResult = { ok: boolean; error?: string };
+
+export async function addTutorBlackout(formData: FormData): Promise<BlackoutResult> {
+  if (checkEditPinFromForm(formData)) {
+    return { ok: false, error: "PIN ไม่ถูกต้อง — กดปุ่ม 🔒 มุมซ้ายล่างใส่ PIN ก่อน" };
+  }
   const id = formData.get("id") as string;
   const start = (formData.get("start_time") as string) || "";
   const end = (formData.get("end_time") as string) || "";
   const reason = ((formData.get("reason") as string) || "").trim().slice(0, 120);
-  if (!id) return;
-  if (!HHMM.test(start) || !HHMM.test(end) || start >= end) return;
+  if (!id) return { ok: false, error: "ไม่พบรหัสครู" };
+  if (!HHMM.test(start) || !HHMM.test(end) || start >= end) {
+    return { ok: false, error: "ช่วงเวลาไม่ถูกต้อง (เวลาจบต้องหลังเวลาเริ่ม)" };
+  }
 
   // รับได้หลายวันพร้อมกัน: field "days" = "1,3,5" (fallback "day_of_week" ตัวเดียว)
   const daysRaw =
@@ -245,10 +252,11 @@ export async function addTutorBlackout(formData: FormData): Promise<void> {
         .filter((d) => Number.isInteger(d) && d >= 1 && d <= 7),
     ),
   ];
-  if (days.length === 0) return;
+  if (days.length === 0) return { ok: false, error: "เลือกวันอย่างน้อย 1 วัน" };
 
-  const supabase = createServerSupabase();
-  await supabase.from("tutor_blackout_windows").insert(
+  // service-role: ตาราง tutor_blackout_windows (ใหม่) อาจมี RLS เปิด → anon เขียนไม่ได้
+  const supabase = createServiceSupabase();
+  const { error } = await supabase.from("tutor_blackout_windows").insert(
     days.map((d) => ({
       tutor_profile_id: id,
       day_of_week: d,
@@ -257,15 +265,19 @@ export async function addTutorBlackout(formData: FormData): Promise<void> {
       reason: reason || null,
     })),
   );
+  if (error) return { ok: false, error: error.message };
   revalidate();
+  return { ok: true };
 }
 
-export async function removeTutorBlackout(formData: FormData): Promise<void> {
-  if (checkEditPinFromForm(formData)) return;
+export async function removeTutorBlackout(formData: FormData): Promise<BlackoutResult> {
+  if (checkEditPinFromForm(formData)) return { ok: false, error: "PIN ไม่ถูกต้อง" };
   const windowId = formData.get("window_id") as string;
-  if (!windowId) return;
+  if (!windowId) return { ok: false, error: "ไม่พบรายการ" };
 
-  const supabase = createServerSupabase();
-  await supabase.from("tutor_blackout_windows").delete().eq("id", windowId);
+  const supabase = createServiceSupabase();
+  const { error } = await supabase.from("tutor_blackout_windows").delete().eq("id", windowId);
+  if (error) return { ok: false, error: error.message };
   revalidate();
+  return { ok: true };
 }

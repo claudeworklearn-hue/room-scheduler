@@ -52,6 +52,17 @@ export type TutorProfile = {
   updated_at: string;
 };
 
+/** ช่วงเวลาที่ครู "ไม่รับสอน" รายสัปดาห์ (ปิดบางช่วงเวลา — ต่างจาก closed_days_for_new ที่ปิดทั้งวัน). */
+export type TutorBlackoutWindow = {
+  id: string;
+  tutor_profile_id: string;
+  day_of_week: DayOfWeek;
+  start_time: string; // "HH:MM:SS"
+  end_time: string;
+  reason: string | null;
+  created_at: string;
+};
+
 export type Course = {
   id: string;
   branch_id: string | null;

@@ -52,6 +52,8 @@ export interface AvailTutor {
   name: string;
   subjects: string[];
   closedDaysForNew: DayOfWeek[];
+  /** ช่วงเวลาที่ครู "ไม่รับสอน" รายสัปดาห์ (blackout) — availability ตัดออกเหมือนมีคาบกั้น. */
+  blackouts?: { dayOfWeek: DayOfWeek; start: TimeString; end: TimeString }[];
 }
 
 export interface AvailRoom {
@@ -202,7 +204,12 @@ export function computeAvailability(
         )
         .map(eventInterval);
 
-      const tutorFree = subtractIntervals(window, tutorBusy).filter(
+      // Blackout windows ที่ครูตั้งว่า "ไม่รับสอน" วันนี้ → ปิดเหมือนมีคาบกั้น
+      const blackoutBusy = (tutor.blackouts ?? [])
+        .filter((b) => b.dayOfWeek === day)
+        .map((b) => ({ start: toMinutes(b.start), end: toMinutes(b.end) }));
+
+      const tutorFree = subtractIntervals(window, [...tutorBusy, ...blackoutBusy]).filter(
         (iv) => iv.end - iv.start >= duration,
       );
 

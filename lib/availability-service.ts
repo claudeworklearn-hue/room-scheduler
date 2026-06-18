@@ -20,7 +20,7 @@ export async function loadAvailability(
   params: AvailabilityParams,
 ): Promise<TutorAvailability[]> {
   const supabase = createServiceSupabase();
-  const [tutorsRes, roomsRes, eventsRes] = await Promise.all([
+  const [tutorsRes, roomsRes, eventsRes, blackoutsRes] = await Promise.all([
     supabase
       .from("tutor_profiles")
       .select("id,display_name_th,subjects,closed_days_for_new,active")
@@ -31,10 +31,33 @@ export async function loadAvailability(
       .select("tutor_profile_id,room_id,day_of_week,start_time,end_time,status,delivery_mode")
       .in("status", ["draft", "scheduled"])
       .limit(2000),
+    // blackout windows — ถ้าตารางยังไม่มี (ก่อนรัน migration 0017) จะ error เฉย ๆ
+    // ไม่ทำให้ availability พัง (จัดการแบบ defensive ด้านล่าง)
+    supabase
+      .from("tutor_blackout_windows")
+      .select("tutor_profile_id,day_of_week,start_time,end_time"),
   ]);
 
   const err = tutorsRes.error || roomsRes.error || eventsRes.error;
   if (err) throw new Error(err.message);
+
+  // group blackout windows by tutor (defensive: query error → ไม่มี blackout)
+  const blackoutsByTutor = new Map<
+    string,
+    { dayOfWeek: DayOfWeek; start: string; end: string }[]
+  >();
+  if (!blackoutsRes.error) {
+    for (const b of blackoutsRes.data ?? []) {
+      const key = b.tutor_profile_id as string;
+      const arr = blackoutsByTutor.get(key) ?? [];
+      arr.push({
+        dayOfWeek: b.day_of_week as DayOfWeek,
+        start: b.start_time as string,
+        end: b.end_time as string,
+      });
+      blackoutsByTutor.set(key, arr);
+    }
+  }
 
   const world: AvailWorld = {
     tutors: (tutorsRes.data ?? []).map((t) => ({
@@ -42,6 +65,7 @@ export async function loadAvailability(
       name: t.display_name_th as string,
       subjects: (t.subjects as string[] | null) ?? [],
       closedDaysForNew: ((t.closed_days_for_new as number[] | null) ?? []) as DayOfWeek[],
+      blackouts: blackoutsByTutor.get(t.id as string) ?? [],
     })),
     rooms: (roomsRes.data ?? []).map((r) => ({
       id: r.id as string,

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Branch, TutorProfile } from "@/lib/supabase/types";
+import type { Branch, TutorProfile, TutorBlackoutWindow } from "@/lib/supabase/types";
 import { TutorFormDrawer } from "./TutorFormDrawer";
+import { TutorBlackoutEditor } from "./TutorBlackoutEditor";
 import { toggleTutorActive } from "@/app/admin/tutors/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
 import { SUBJECT_LIST } from "@/lib/subject-colors";
@@ -11,14 +12,16 @@ import { SUBJECT_LIST } from "@/lib/subject-colors";
 type Props = {
   branches: Branch[];
   tutors: TutorProfile[];
+  blackoutsByTutor: Record<string, TutorBlackoutWindow[]>;
 };
 
-export function TutorsManager({ branches, tutors }: Props) {
+export function TutorsManager({ branches, tutors, blackoutsByTutor }: Props) {
   const router = useRouter();
   const [showInactive, setShowInactive] = useState(false);
   const [drawer, setDrawer] = useState<
     { mode: "create" } | { mode: "edit"; tutor: TutorProfile } | null
   >(null);
+  const [blackoutTutor, setBlackoutTutor] = useState<TutorProfile | null>(null);
 
   const filtered = showInactive ? tutors : tutors.filter((t) => t.active);
   const branchById = new Map(branches.map((b) => [b.id, b]));
@@ -130,6 +133,17 @@ export function TutorsManager({ branches, tutors }: Props) {
                     >
                       แก้ไข
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setBlackoutTutor(t)}
+                      className="rounded border border-red-200 px-2.5 py-1 text-xs text-red-700 hover:bg-red-50"
+                      title="ตั้งช่วงเวลาที่ครูไม่รับสอน"
+                    >
+                      🚫 เวลาปิด
+                      {(blackoutsByTutor[t.id]?.length ?? 0) > 0
+                        ? ` (${blackoutsByTutor[t.id].length})`
+                        : ""}
+                    </button>
                     <form
                       action={async (fd) => {
                         await toggleTutorActive(fd);
@@ -171,6 +185,14 @@ export function TutorsManager({ branches, tutors }: Props) {
           router.refresh();
         }}
       />
+
+      {blackoutTutor && (
+        <TutorBlackoutEditor
+          tutor={blackoutTutor}
+          windows={blackoutsByTutor[blackoutTutor.id] ?? []}
+          onClose={() => setBlackoutTutor(null)}
+        />
+      )}
     </>
   );
 }

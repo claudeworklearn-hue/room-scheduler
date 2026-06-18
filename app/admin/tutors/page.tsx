@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabase/server";
-import type { Branch, TutorProfile } from "@/lib/supabase/types";
+import type { Branch, TutorProfile, TutorBlackoutWindow } from "@/lib/supabase/types";
 import { TutorsManager } from "@/components/tutors/TutorsManager";
 import { AdminGuard } from "@/components/edit-mode/AdminGuard";
 
@@ -33,6 +33,19 @@ export default async function TutorsPage() {
   const branches = (branchesData ?? []) as Branch[];
   const tutors = (tutorsData ?? []) as TutorProfile[];
 
+  // blackout windows (defensive: ถ้ายังไม่รัน migration 0017 → ปล่อยว่าง ไม่ทำหน้าพัง)
+  const blackoutsByTutor: Record<string, TutorBlackoutWindow[]> = {};
+  const bw = await supabase
+    .from("tutor_blackout_windows")
+    .select("*")
+    .order("day_of_week")
+    .order("start_time");
+  if (!bw.error) {
+    for (const w of (bw.data ?? []) as TutorBlackoutWindow[]) {
+      (blackoutsByTutor[w.tutor_profile_id] ??= []).push(w);
+    }
+  }
+
   return (
     <main className="mx-auto max-w-5xl px-6 py-6">
       <nav className="mb-4 text-sm text-gray-500">
@@ -47,7 +60,7 @@ export default async function TutorsPage() {
       </p>
 
       <AdminGuard label="ข้อมูลจัดการติวเตอร์">
-        <TutorsManager branches={branches} tutors={tutors} />
+        <TutorsManager branches={branches} tutors={tutors} blackoutsByTutor={blackoutsByTutor} />
       </AdminGuard>
     </main>
   );

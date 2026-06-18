@@ -219,3 +219,39 @@ export async function toggleTutorActive(formData: FormData): Promise<void> {
   await supabase.from("tutor_profiles").update({ active: next }).eq("id", id);
   revalidate();
 }
+
+// ---------------------------------------------------------
+// Blackout windows — ช่วงเวลาที่ครู "ไม่รับสอน" (ปิดบางช่วง)
+// ---------------------------------------------------------
+const HHMM = /^\d{2}:\d{2}$/;
+
+export async function addTutorBlackout(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
+  const id = formData.get("id") as string;
+  const day = Number(formData.get("day_of_week"));
+  const start = (formData.get("start_time") as string) || "";
+  const end = (formData.get("end_time") as string) || "";
+  const reason = ((formData.get("reason") as string) || "").trim().slice(0, 120);
+  if (!id || !Number.isInteger(day) || day < 1 || day > 7) return;
+  if (!HHMM.test(start) || !HHMM.test(end) || start >= end) return;
+
+  const supabase = createServerSupabase();
+  await supabase.from("tutor_blackout_windows").insert({
+    tutor_profile_id: id,
+    day_of_week: day,
+    start_time: start,
+    end_time: end,
+    reason: reason || null,
+  });
+  revalidate();
+}
+
+export async function removeTutorBlackout(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
+  const windowId = formData.get("window_id") as string;
+  if (!windowId) return;
+
+  const supabase = createServerSupabase();
+  await supabase.from("tutor_blackout_windows").delete().eq("id", windowId);
+  revalidate();
+}

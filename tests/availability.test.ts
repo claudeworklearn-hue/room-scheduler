@@ -147,6 +147,31 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
   ok("online class doesn't block onsite availability", mon?.freeSlots[0]?.start === "16:00" && mon?.freeSlots[0]?.end === "22:00", mon?.freeSlots[0]);
 }
 
+// 10 — blackout window ตัดช่วงที่ครูไม่รับสอนออก
+{
+  const t: AvailTutor = { ...tutorChem, blackouts: [{ dayOfWeek: 1, start: "16:00", end: "18:00" }] };
+  const res = computeAvailability(
+    { subject: "chem", durationMin: 60, days: [1] },
+    { tutors: [t], rooms: [roomA], events: [] },
+  );
+  const mon = res.find((r) => r.dayOfWeek === 1);
+  ok(
+    "blackout 16:00–18:00 → free เริ่ม 18:00",
+    mon?.freeSlots[0]?.start === "18:00" && mon?.freeSlots[0]?.end === "22:00",
+    mon?.freeSlots,
+  );
+}
+
+// 11 — blackout เต็มช่วงเปิด → ไม่มี slot
+{
+  const t: AvailTutor = { ...tutorChem, blackouts: [{ dayOfWeek: 1, start: "16:00", end: "22:00" }] };
+  const res = computeAvailability(
+    { subject: "chem", durationMin: 60, days: [1] },
+    { tutors: [t], rooms: [roomA], events: [] },
+  );
+  ok("blackout เต็มวัน → ไม่มี slot", res.find((r) => r.dayOfWeek === 1) === undefined, res);
+}
+
 // eslint-disable-next-line no-console
 console.log(`\nAvailability: ${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

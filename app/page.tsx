@@ -158,6 +158,20 @@ export default async function HomePage() {
               desc="10 agent · วิเคราะห์/แนะนำ slot · ทดสอบผ่าน panel"
               meta="Phase 1"
             />
+            <ActionCard
+              href="/book"
+              icon="📅"
+              title="จองเรียนเดี่ยว / เช็คเวลา"
+              desc="หน้าให้ผู้ปกครอง — เลือกวิชา ดูเวลาครูว่าง ส่งคำขอจอง"
+              meta="หน้าลูกค้า"
+            />
+            <ActionCard
+              href="/admin/booking-requests"
+              icon="📨"
+              title="คำขอจองเรียนเดี่ยว"
+              desc="คำขอจากหน้า /book — ยืนยัน/ปฏิเสธ (ใส่ PIN ก่อน)"
+              meta="ใหม่"
+            />
           </div>
         </section>
 

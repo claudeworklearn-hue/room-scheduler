@@ -52,6 +52,8 @@ export interface AvailTutor {
   name: string;
   subjects: string[];
   closedDaysForNew: DayOfWeek[];
+  /** ครูรับสอนคอร์สเดี่ยวไหม — false = ไม่เสนอครูคนนี้เลยในการจองเดี่ยว (undefined = รับ). */
+  acceptsPrivate?: boolean;
   /** ช่วงเวลาที่ครู "ไม่รับสอน" รายสัปดาห์ (blackout) — availability ตัดออกเหมือนมีคาบกั้น. */
   blackouts?: { dayOfWeek: DayOfWeek; start: TimeString; end: TimeString }[];
 }
@@ -179,8 +181,10 @@ export function computeAvailability(
   const minCap = params.minCapacity ?? 1;
 
   const rooms = world.rooms.filter((r) => r.capacity >= minCap);
-  const tutors = world.tutors.filter((t) =>
-    t.subjects.some((s) => s.trim().toLowerCase() === subject),
+  const tutors = world.tutors.filter(
+    (t) =>
+      t.acceptsPrivate !== false && // ครูที่ไม่รับสอนเดี่ยว → ไม่เสนอเลย
+      t.subjects.some((s) => s.trim().toLowerCase() === subject),
   );
 
   const result: TutorAvailability[] = [];

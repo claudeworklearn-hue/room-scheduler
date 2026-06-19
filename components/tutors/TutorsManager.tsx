@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Branch, TutorProfile, TutorBlackoutWindow } from "@/lib/supabase/types";
 import { TutorFormDrawer } from "./TutorFormDrawer";
 import { TutorBlackoutEditor } from "./TutorBlackoutEditor";
-import { toggleTutorActive } from "@/app/admin/tutors/actions";
+import { toggleTutorActive, toggleTutorAcceptsPrivate } from "@/app/admin/tutors/actions";
 import { EditPinField } from "@/components/edit-mode/EditPinField";
 import { SUBJECT_LIST } from "@/lib/subject-colors";
 
@@ -144,6 +144,31 @@ export function TutorsManager({ branches, tutors, blackoutsByTutor }: Props) {
                         ? ` (${blackoutsByTutor[t.id].length})`
                         : ""}
                     </button>
+                    <form
+                      action={async (fd) => {
+                        await toggleTutorAcceptsPrivate(fd);
+                        router.refresh();
+                      }}
+                    >
+                      <EditPinField />
+                      <input type="hidden" name="id" value={t.id} />
+                      <input
+                        type="hidden"
+                        name="accepts"
+                        value={String(t.accepts_new_private === false)}
+                      />
+                      <button
+                        type="submit"
+                        className={`rounded border px-2.5 py-1 text-xs ${
+                          t.accepts_new_private === false
+                            ? "border-gray-300 text-gray-400 hover:bg-gray-50"
+                            : "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                        }`}
+                        title="ครูรับสอนคอร์สเดี่ยวไหม (กดสลับ)"
+                      >
+                        {t.accepts_new_private === false ? "✗ ไม่รับเดี่ยว" : "✓ รับเดี่ยว"}
+                      </button>
+                    </form>
                     <form
                       action={async (fd) => {
                         await toggleTutorActive(fd);

@@ -172,6 +172,16 @@ const world = (events: AvailWorld["events"]): AvailWorld => ({
   ok("blackout เต็มวัน → ไม่มี slot", res.find((r) => r.dayOfWeek === 1) === undefined, res);
 }
 
+// 12 — ครูไม่รับสอนเดี่ยว (acceptsPrivate=false) → ไม่อยู่ในผลเลย
+{
+  const t: AvailTutor = { ...tutorChem, acceptsPrivate: false };
+  const res = computeAvailability(
+    { subject: "chem", durationMin: 60, days: [1] },
+    { tutors: [t], rooms: [roomA], events: [] },
+  );
+  ok("ครูไม่รับเดี่ยว (acceptsPrivate=false) → ไม่เสนอ", res.length === 0, res);
+}
+
 // eslint-disable-next-line no-console
 console.log(`\nAvailability: ${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

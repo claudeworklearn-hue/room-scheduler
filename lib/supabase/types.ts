@@ -47,6 +47,8 @@ export type TutorProfile = {
   subjects: string[];
   /** ISO weekdays (1=Mon..7=Sun) the tutor refuses to take new courses on. */
   closed_days_for_new: number[];
+  /** ครูรับสอนคอร์สเดี่ยว/Private เพิ่มไหม — false = ไม่เสนอใน /book + บอท. (default true หลัง migration 0018) */
+  accepts_new_private: boolean;
   active: boolean;
   created_at: string;
   updated_at: string;

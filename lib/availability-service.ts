@@ -23,7 +23,7 @@ export async function loadAvailability(
   const [tutorsRes, roomsRes, eventsRes, blackoutsRes] = await Promise.all([
     supabase
       .from("tutor_profiles")
-      .select("id,display_name_th,subjects,closed_days_for_new,active")
+      .select("id,display_name_th,subjects,closed_days_for_new,accepts_new_private,active")
       .eq("active", true),
     supabase.from("rooms").select("id,name_th,capacity,active").eq("active", true),
     supabase
@@ -65,6 +65,7 @@ export async function loadAvailability(
       name: t.display_name_th as string,
       subjects: (t.subjects as string[] | null) ?? [],
       closedDaysForNew: ((t.closed_days_for_new as number[] | null) ?? []) as DayOfWeek[],
+      acceptsPrivate: (t.accepts_new_private as boolean | null) ?? true,
       blackouts: blackoutsByTutor.get(t.id as string) ?? [],
     })),
     rooms: (roomsRes.data ?? []).map((r) => ({

@@ -281,3 +281,18 @@ export async function removeTutorBlackout(formData: FormData): Promise<BlackoutR
   revalidate();
   return { ok: true };
 }
+
+/**
+ * Toggle ครู "รับสอนคอร์สเดี่ยว" — false = availability (/book + บอท) ไม่เสนอครูคนนี้เลย.
+ * อยู่บน tutor_profiles (RLS ปิดจาก 0006) → ใช้ anon ได้.
+ */
+export async function toggleTutorAcceptsPrivate(formData: FormData): Promise<void> {
+  if (checkEditPinFromForm(formData)) return;
+  const id = formData.get("id") as string;
+  const next = formData.get("accepts") === "true";
+  if (!id) return;
+
+  const supabase = createServerSupabase();
+  await supabase.from("tutor_profiles").update({ accepts_new_private: next }).eq("id", id);
+  revalidate();
+}

@@ -3,10 +3,12 @@
 import { useMemo, useState, useTransition } from "react";
 import { SUBJECT_LIST } from "@/lib/subject-colors";
 import type { TutorAvailability } from "@/lib/availability";
+import type { DayOfWeek } from "@/lib/agents/types";
 import { useLiff } from "@/components/booking/useLiff";
 import { getBookingAvailability, createBookingRequest } from "@/app/book/actions";
 
 const DAY_LABELS = ["", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์", "อาทิตย์"];
+const DAY_SHORT = ["", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส.", "อา."];
 
 const GRADES = ["ม.6", "ม.5", "ม.4", "ม.3", "ม.2", "ม.1", "ป.6", "ป.5", "ป.4", "อื่น ๆ"];
 
@@ -26,6 +28,7 @@ export function BookingForm() {
   const [subject, setSubject] = useState("");
   const [grade, setGrade] = useState("");
   const [duration, setDuration] = useState(120);
+  const [filterDays, setFilterDays] = useState<number[]>([]); // ว่าง = ดูทุกวัน
 
   const [phase, setPhase] = useState<"choose" | "slots" | "form" | "done">("choose");
   const [results, setResults] = useState<TutorAvailability[]>([]);
@@ -47,7 +50,11 @@ export function BookingForm() {
       return;
     }
     startTransition(async () => {
-      const res = await getBookingAvailability(subject, duration);
+      const res = await getBookingAvailability(
+        subject,
+        duration,
+        filterDays.length ? (filterDays.slice().sort((a, b) => a - b) as DayOfWeek[]) : undefined,
+      );
       if (!res.ok) {
         setError(res.error ?? "ดึงเวลาว่างไม่ได้");
         return;
@@ -123,6 +130,45 @@ export function BookingForm() {
                 <option value={150}>2.5 ชั่วโมง</option>
                 <option value={180}>3 ชั่วโมง</option>
               </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              วันที่สะดวก{" "}
+              <span className="font-normal text-gray-400">(เลือกได้หลายวัน · ไม่เลือก = ดูทุกวัน)</span>
+            </label>
+            <div className="flex flex-wrap gap-1.5">
+              {[1, 2, 3, 4, 5, 6, 7].map((d) => {
+                const on = filterDays.includes(d);
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() =>
+                      setFilterDays((prev) =>
+                        prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d],
+                      )
+                    }
+                    className={`rounded-full border px-3 py-1.5 text-sm ${
+                      on
+                        ? "border-brand-500 bg-brand-50 text-brand-700"
+                        : "border-gray-300 bg-white text-gray-600"
+                    }`}
+                  >
+                    {DAY_SHORT[d]}
+                  </button>
+                );
+              })}
+              {filterDays.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setFilterDays([])}
+                  className="px-2 py-1.5 text-sm text-gray-400 underline"
+                >
+                  ล้าง
+                </button>
+              )}
             </div>
           </div>
 
